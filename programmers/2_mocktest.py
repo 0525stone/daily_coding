@@ -33,6 +33,7 @@ import numpy as np
 
 
 def solution(answers):
+
     p_1 = [1, 2, 3, 4, 5]
     p_2 = [2, 1, 2, 3, 2, 4, 2, 5]
     p_3 = [3, 3, 1, 1, 2, 2, 4, 4, 5, 5]
@@ -44,6 +45,7 @@ def solution(answers):
     sco_1 = 0
     sco_2 = 0
     sco_3 = 0
+
     for a, b, c, d in zip(answers, stu_1, stu_2, stu_3):
 
         if (a == b):
