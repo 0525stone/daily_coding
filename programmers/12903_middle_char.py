@@ -10,6 +10,7 @@ solution
     for 문에 인덱스랑 문자열 하나씩 읽어들여서 짝수면 두개, 홀수면 하나 return 시킴
 """
 
+# divmod : // 와 % 한 결과 두개를 출력해줌
 
 def solution(s):
     # print(s)

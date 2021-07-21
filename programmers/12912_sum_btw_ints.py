@@ -9,6 +9,12 @@ a와 b는 -10,000,000 이상 10,000,000 이하인 정수입니다.
 a와 b의 대소관계는 정해져있지 않습니다.
 """
 
+# 백준을 위한 입력 받는 방법
+# 백준 : pypy3 가 python3 보다 더 빨리 동작
+# 반복문으로 여러 입력을 받아야 할 때는 꼭 sys.stdin.readline 으로..
+import sys
+input = sys.stdin.readline
+
 def solution(a,b):
 
     if a<b:
