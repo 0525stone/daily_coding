@@ -19,6 +19,15 @@ arr = [4, 4, 4, 3, 3] 이면 [4, 3] 을 return 합니다.
 #     print(result)
 
 
+# zip 사용해서 두개 씩 비교
+# 내가 한 방식보다 더 간결하다
+def solution(arr):
+    answer = []
+    for i,j in zip(arr[-1:],arr[1:]):
+        if(i==j):
+            answer.append(i)
+
+
 
 def solution2(arr):
     result = [arr[0]]
@@ -31,6 +40,7 @@ def solution2(arr):
     print(result)
 
 def solution3(arr):
+
     a = [arr[0]]
     for i,ar in enumerate(arr[:-1]):
         print(ar)
@@ -41,4 +51,4 @@ def solution3(arr):
 arr = [2,1,1,3,3,0,1,1]	# [1,3,0,1]
 # arr = [4,4,4,3,3]
 
-solution_(arr)
+solution2(arr)
