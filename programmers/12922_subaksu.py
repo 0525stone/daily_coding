@@ -6,6 +6,12 @@
 n은 길이 10,000이하인 자연수입니다.
 
 """
+import itertools
+
+def solution_km(n):
+    # 이터툴스로 이렇게 해서 마지막에 join으로 잘라서 출력
+    itertools.cycle(['수','박'])
+
 def solution(n):
     sb = '수박'
     return ''.join([sb[i%2] for i in range(n)])
