@@ -26,13 +26,15 @@ def solution1(arr, divisor):
     return sorted(answer)
 
 # divisor 를 broadcast 하여 나누게 할 수는 없나??
-def solution2(arr, divisor):
-    answer = []
-    # print(arr%)
-    # answer = [True lambda:arr]
+# another solution
+
+
+# programmers solution using comprehension
+def solution2(arr, divisor): return sorted([n for n in arr if n%divisor == 0]) or [-1]
+
 
 # arr, divisor = [5, 9, 7, 10], 5	# [5, 10]
 arr, divisor = [2, 36, 1, 3], 1	# [1, 2, 3, 36]
 # arr, divisor = [3,2,6], 10	        # [-1]
 ans = solution2(arr, divisor)
-# print(ans)
+print(ans)
