@@ -18,73 +18,6 @@ Memory Usage: 14.9 MB, less than 37.18% of Python3 online submissions for Trappi
 """
 from typing import *
 
-
-# class Solution:
-#     def trap(self, height: List[int]) -> int:
-#
-#         water = 0
-#         water_temp = 0
-#         flag = 0
-#         for i in range(len(height)):
-#
-#             if (height[i]):
-#                 if(flag==0): # 처음 trap 만났을 때
-#                     temp = height[i]
-#                     flag = 1
-#
-#                 else:
-#                     if(temp-height[i]>0):
-#                         water_temp =water_temp +temp-height[i]
-#                     else:
-#                         temp = height[i]
-#             else:
-#                 if(flag==0):
-#                     continue
-#                 else:
-#                     water = water+temp
-#         return water
-#
-# class Solution:
-#     def trap(self, height: List[int]) -> int:
-#
-#         _flag = 0 # 딱 한번 쓰이는 _flag
-#
-#         box_ = []
-#         high = 0
-#         high_i = 0
-#         water = 0
-#         for i in range(len(height)):
-#             # print('warking? : ',i)
-#             temp_h = height[i]
-#             if(temp_h):
-#                 if(_flag):
-#
-#                     if high>temp_h: # 새로운 박스가 기존 것보다 낮으면
-#                         box_.append(temp_h)
-#                         # 기존 box안에서 확인 필요
-#                         # if(i-high_i):
-#                         water = water + high * (i - high_i - 1) - sum(box_[high_i:-1])
-#                         for j in range(0,i-high_i):
-#                             box_[j] = temp_h
-#                             # box_[high_i:-1] = temp_h
-#
-#                     else: # 같거나 더 높으면 고인물 한번 계산
-#                         box_.append(temp_h)
-#                         water = water + high*(i-high_i-1) - sum(box_[high_i:-1])  # box의 넓이
-#                         box_.clear()
-#                         high = temp_h
-#                         high_i = i
-#                         print(i, 'clear check : ',box_, '  water : ',water)
-#                         box_.append(temp_h)
-#
-#                 else:
-#                     high = temp_h
-#                     high_i = i
-#                     box_.append(temp_h)
-#                     _flag = 1
-#         return water
-#
-
 class Solution:
     def trap(self, height: List[int]) -> int:
 
@@ -97,7 +30,7 @@ class Solution:
 
             if(h):
                 if(_flag==0):
-                    high = h
+                    high = h     # 이 변수는 없어도 될 뻔 height[i]
                     high_i = i
                     _flag = 1
                     continue
@@ -108,14 +41,13 @@ class Solution:
                         height[j] = high
                     high = h
                     high_i = i
-                else:  # high 보단 짧은 h 만났을 때,
+                else:            # high 보단 짧은 h 만났을 때,
                     check_h = 0
                     for j in range(high_i+1,i):  # height counting
                         if(height[j]>h):
                             check_h = check_h + h
                         else:
                             check_h = check_h + height[j]
-                            # height[j] = h
 
                     if((i-high_i-1)*h  < check_h):
                         continue
@@ -126,9 +58,6 @@ class Solution:
                                 height[k] = h
 
 
-
-
-            # print(height)
         return water
 
 
