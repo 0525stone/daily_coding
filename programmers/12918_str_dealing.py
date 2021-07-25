@@ -6,6 +6,8 @@
 s는 길이 1 이상, 길이 8 이하인 문자열입니다.
 
 """
+# 기민님 try except 로 구현(가독성 되게 좋은데?)
+
 def solution1(s):
 
     print(len(s))
