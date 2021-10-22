@@ -18,7 +18,7 @@ Runtime : 28 ms Memory : 14.3 MB
 Runtime: 28 ms, faster than 86.02% of Python3 online submissions for Valid Parentheses.
 Memory Usage: 14.3 MB, less than 63.46% of Python3 online submissions for Valid Parentheses.
 
-
+(]
 """
 bracket = {'(':')','[':']','{':'}'}
 class Solution:
@@ -39,8 +39,6 @@ class Solution:
                     continue
                 else:
                     return False
-
-
 
             i = i+1
         if(len(s_temp) != 0):

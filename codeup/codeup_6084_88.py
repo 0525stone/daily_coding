@@ -7,6 +7,12 @@ def sol_6084():
     nums = input()
     num = nums.split(" ")
     h, b, c, s = int(num[0]), int(num[1]), int(num[2]), int(num[3])
+
+    # 다른 분 풀이
+    hbcs = input().split(' ')
+    h, b, c, s = map(int,hbcs)
+
+
     print('{:.1f} MB'.format(h*b*c*s/8/1024/1024))
 
 def sol_6085():

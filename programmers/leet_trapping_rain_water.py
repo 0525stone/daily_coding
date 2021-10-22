@@ -3,7 +3,6 @@ Given n non-negative integers representing an elevation map where the width of e
    compute how much water it can trap after raining.
 
 
-
 Input: height = [0,1,0,2,1,0,1,3,2,1,2,1]
 Output: 6
 Explanation: The above elevation map (black section) is represented by array [0,1,0,2,1,0,1,3,2,1,2,1].
@@ -13,7 +12,6 @@ result
 
 Runtime: 2332 ms, faster than 5.01% of Python3 online submissions for Trapping Rain Water.
 Memory Usage: 14.9 MB, less than 37.18% of Python3 online submissions for Trapping Rain Water.
-
 
 """
 from typing import *
@@ -26,6 +24,7 @@ class Solution:
 
         high = 0
         high_i = 0
+
         for i, h in enumerate(height):
 
             if(h):
@@ -41,6 +40,7 @@ class Solution:
                         height[j] = high
                     high = h
                     high_i = i
+
                 else:            # high 보단 짧은 h 만났을 때,
                     check_h = 0
                     for j in range(high_i+1,i):  # height counting
@@ -56,6 +56,7 @@ class Solution:
                         for k in range(high_i+1,i):
                             if(height[k]<h):
                                 height[k] = h
+            print(height, water)
 
 
         return water

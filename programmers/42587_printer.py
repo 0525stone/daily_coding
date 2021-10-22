@@ -71,14 +71,14 @@ def solution(prior, loc):
         a = prior.pop(0)
         if any(y>a for y in prior):
             prior.append(a)
-            pass
+
         else:
             n = n + 1
-            if loc==0:
+            # if loc==0:
+            if not loc:
                 break
 
         loc = loc -1
-
         if(loc<0): loc = len(prior)-1
 
     return n

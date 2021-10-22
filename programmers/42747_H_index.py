@@ -35,12 +35,10 @@ def solution_p(citations):
     answer = max(map(min, enumerate(citations, start=1)))
     return answer
 
-
 # 런타임 에러
 def solution(citations):
 
     citations = sorted(citations, reverse=True)
-
     answer = 1
 
     while True:

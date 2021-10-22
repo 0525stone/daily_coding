@@ -59,7 +59,7 @@ record는 다음과 같은 문자열이 담긴 배열이며, 길이는 1 이상 
 
 """
 
-# 프로그래머스 꺼
+# programmers
 def solution(record):
     answer = []
     namespace = {}
@@ -77,13 +77,12 @@ def solution(record):
 
 
 
-# 내
+# mine
 def to_msg(msgs,names):
 
     result = []
     sentence_dict = {'Enter': '들어왔습니다.', 'Leave': '나갔습니다.'}
     for idx, msg in enumerate(msgs):
-        # print(msg[0])
         result.append(f'{names[msg[1]]}님이 {sentence_dict[msg[0]]}')
     return result
 
@@ -98,8 +97,7 @@ def solution(records):
             msgs.append([word[0], word[1]])
             name = names.get(word[1])
 
-            # 코딩의기술 내용
-            # key 를 추가하는 부분을 최소화하기 위해 Enter 파트에 추가() # 새로운 key를 만나는 경우는 오직 입장할 때만
+            # 코딩의기술 내용 : key 를 추가하는 부분을 최소화하기 위해 Enter 파트에 추가() # 새로운 key를 만나는 경우는 오직 입장할 때만
             if name is None:
                 names[word[1]] = []
             names[word[1]] = word[2]
