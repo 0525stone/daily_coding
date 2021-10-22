@@ -31,114 +31,23 @@
 import numpy as np
 # answer = np.ndarray.tolist(answer)
 
-def solution5(n, lost, reserve):
-    print('reserve : ',reserve)
+def solution_1022(n, lost, reserve):
+    """
+    set : 차집합에 대해서 쉽게 사용 가능
+      - 중복을 허용하지 않는 집합 자료
+
+    """
+    set_reserve = set(reserve) - set(lost)
+    set_lost = set(lost) - set(reserve)
+    for i in set_reserve:
+        if i-1 in set_lost:
+            set_lost.remove(i-1)
+        elif i+1 in set_lost:
+            set_lost.remove(i+1)
+    return n-len(set_lost)
 
 
- # numpy 화
-    lost = np.array(lost)
-    reserve = np.array(reserve)
-    lost = lost-1
-    reserve = reserve-1 # index 맞추기 위해
 
-    print(type(reserve), reserve)
-    print(type(lost), lost)
-
- # 확인 위한 변수들
-    check = np.zeros(n)
-    br = np.zeros(n)
-    bl = np.zeros(n)
-
-    _br = np.array([i-1 for i in reserve if i-1>0])# and i-1<n])
-    br[_br] = 1
-
-    _bl = np.array([i+1 for i in reserve if i+1<n])
-    bl[_bl] = 1
-
-    check[lost] = 1
-
-    print('br ',br)
-    print('bl ',bl)
-    print('check ', check)
-
- # bitwise 동작이 필요
-
-    # br[reserve+1] = 1
-    bl[reserve-1] = 1
-    print('br ',br)
-    print('bl ',bl)
-
-    # b_l
-
-    answer = 0
-    return answer
-
-
-def sol_br(lo,re):
-    r = np.array([-1,1,2])
-    re_r = np.concatenate(([re[-1]],re[:-1]),axis=0)
-    re_r = re_r.copy()
-    lo = lo.copy()
-    re = re.copy()
-    print(type(lo))
-    print('rer', re[:-1])
-    print('re-1 : ',re_r, lo)
-
-# 왜 여기서는 np array 끼리 bitwise_and 가 안되는 걸까?
-    a =np.array([0,1,0,1,0])
-    b = np.array([1,1,0,1,1])
-    print('ab', np.bitwise_and(a,b))
-    print('여기?',np.bitwise_and(lo,re))
-    # print('re_r@lo', lo & re_r)
-    print(lo.shape)
-    print(re_r.shape)
-    print(np.array([1,1,0,1,1]).shape)
-    # print(np.bitwise_and(list(lo),list(re_r)))        #re_r,lo))
-
-def solution_(n, lost, reserve):
-    lost = np.array(lost)
-    reserve = np.array(reserve)
-    lost = lost - 1
-    reserve = reserve - 1  # index 맞추기 위해
-    print('lost : ',lost)
-    print('reserve : ',reserve)
-
-    lo = np.zeros(n)
-    lo[lost] = 1
-    re = np.ones(n)
-    re[reserve] = 0
-
-    print('lost : ',lo)
-    print('reserve : ',re)
-
-    sol_br(lo,re)
-
-    return 'nothing'
-
-
-def sol1_br(gym, lost, reserve):
-
-    re_ = reserve+1
-
-    print('re_ : ',re_)
-
-    stu = 0
-
-    return stu
-
-
-def solution1(n, lost, reserve):
-    gym = np.ones(n)
-    lost = np.array(lost)-1
-    reserve = np.array(reserve)-1
-    print('lost : ',lost)
-    print('reserve : ',reserve)
-
-    gym[lost-1] = 0
-    sol1_br(gym, lost, reserve)
-
-    print(lost)
-    print(gym)
 
 
 
@@ -151,9 +60,9 @@ def solution1(n, lost, reserve):
 예제 #2
 3번 학생이 2번 학생이나 4번 학생에게 체육복을 빌려주면 학생 4명이 체육수업을 들을 수 있습니다.
 """
-# n, lost, reserve = 5, [2, 4], [1, 3, 5]     # 5
-n, lost, reserve = 5, [2, 4], [3]           # 4
+n, lost, reserve = 5, [2, 4], [1, 3, 5]     # 5
+# n, lost, reserve = 5, [2, 4], [3]           # 4
 # n, lost, reserve = 3, [3], [1]              # 2
 
-ans = solution1(n, lost, reserve)
+ans = solution_1022(n, lost, reserve)
 print(ans)
