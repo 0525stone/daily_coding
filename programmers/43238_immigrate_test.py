@@ -50,7 +50,6 @@ def binary_search(n, times, start, end):
     else:
         return binary_search(n, times, start, end + (end + start) // 2)
 
-
 def solution(n, times):
     ti = np.array(times)
     answer = binary_search(n, times, 0, np.max(ti))
