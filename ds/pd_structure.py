@@ -7,3 +7,5 @@ print(type(sr))
 print('\n')
 
 print(sr)
+
+print('because of git')
