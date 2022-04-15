@@ -187,6 +187,165 @@ for i, feature in enumerate(METAFEATURES):
 plt.show()
 
 # %%
+## 3. Target and N-grams
+## 3.1 Target
+fig, axes = plt.subplots(ncols=2, figsize=(17,4), dpi=100)
+plt.tight_layout()
+
+df_train.groupby('target').count()['id'].plot(kind='pie', ax=axes[0], labels=['Not Disaster (57%)', 'Disaster (43%)'])
+sns.countplot(x=df_train['target'], hue=df_train['target'], ax=axes[1])
+
+axes[0].set_ylabel('')
+axes[1].set_ylabel('')
+axes[1].set_xticklabels(['Not Disaster (4342)', 'Disaster (3271)'])
+axes[0].tick_params(axis='x', labelsize=15)
+axes[0].tick_params(axis='y', labelsize=15)
+axes[1].tick_params(axis='x', labelsize=15)
+axes[1].tick_params(axis='y', labelsize=15)
+
+axes[0].set_title('Target Distribution in Training Set', fontsize=13)
+axes[1].set_title('Target Count in Training Set', fontsize=13)
+
+plt.show()
+
+# %%
+## N-gram 언어 모델(카운트에 기반한 통계적 접근. SLM 일종. 이전에 등장한 단어(n개)들을 고려하여 추정하는 방법.)
+## https://wikidocs.net/21692
+
+def generate_ngrams(text, n_gram=1):
+    token = [token for token in text.lower().split(' ') if token != '' if token not in STOPWORDS]
+    ngrams = zip(*[token[i:] for i in range(n_gram)])
+    return [' '.join(ngram) for ngram in ngrams]
+
+N = 100
+
+# Unigrams
+disaster_unigrams = defaultdict(int)
+nondisaster_unigrams = defaultdict(int)
+
+for tweet in df_train[DISASTER_TWEETS]['text']:
+    for word in generate_ngrams(tweet):        # n_gram의 default = 1
+        disaster_unigrams[word] += 1
+        
+for tweet in df_train[~DISASTER_TWEETS]['text']:
+    for word in generate_ngrams(tweet):
+        nondisaster_unigrams[word] += 1
+        
+df_disaster_unigrams = pd.DataFrame(sorted(disaster_unigrams.items(), key=lambda x: x[1])[::-1])
+df_nondisaster_unigrams = pd.DataFrame(sorted(nondisaster_unigrams.items(), key=lambda x: x[1])[::-1])
+
+# Bigrams
+disaster_bigrams = defaultdict(int)
+nondisaster_bigrams = defaultdict(int)
+
+for tweet in df_train[DISASTER_TWEETS]['text']:
+    for word in generate_ngrams(tweet, n_gram=2):
+        disaster_bigrams[word] += 1
+        
+for tweet in df_train[~DISASTER_TWEETS]['text']:
+    for word in generate_ngrams(tweet, n_gram=2):
+        nondisaster_bigrams[word] += 1
+        
+df_disaster_bigrams = pd.DataFrame(sorted(disaster_bigrams.items(), key=lambda x: x[1])[::-1])
+df_nondisaster_bigrams = pd.DataFrame(sorted(nondisaster_bigrams.items(), key=lambda x: x[1])[::-1])
+
+# Trigrams
+disaster_trigrams = defaultdict(int)
+nondisaster_trigrams = defaultdict(int)
+
+for tweet in df_train[DISASTER_TWEETS]['text']:
+    for word in generate_ngrams(tweet, n_gram=3):
+        disaster_trigrams[word] += 1
+        
+for tweet in df_train[~DISASTER_TWEETS]['text']:
+    for word in generate_ngrams(tweet, n_gram=3):
+        nondisaster_trigrams[word] += 1
+        
+df_disaster_trigrams = pd.DataFrame(sorted(disaster_trigrams.items(), key=lambda x: x[1])[::-1])
+df_nondisaster_trigrams = pd.DataFrame(sorted(nondisaster_trigrams.items(), key=lambda x: x[1])[::-1])
+
+print('N-gram created')
+
+# %%
+### N-gram에서 Unigram
+fig, axes = plt.subplots(ncols=2, figsize=(18, 50), dpi=100)
+plt.tight_layout()
+
+sns.barplot(y=df_disaster_unigrams[0].values[:N], x=df_disaster_unigrams[1].values[:N], ax=axes[0], color='red')
+sns.barplot(y=df_nondisaster_unigrams[0].values[:N], x=df_nondisaster_unigrams[1].values[:N], ax=axes[1], color='green')
+
+for i in range(2):
+    axes[i].spines['right'].set_visible(False)
+    axes[i].set_xlabel('')
+    axes[i].set_ylabel('')
+    axes[i].tick_params(axis='x', labelsize=13)
+    axes[i].tick_params(axis='y', labelsize=13)
+
+axes[0].set_title(f'Top {N} most common unigrams in Disaster Tweets', fontsize=15)
+axes[1].set_title(f'Top {N} most common unigrams in Non-disaster Tweets', fontsize=15)
+
+plt.show()
+# %%
+### N-gram에서 Bigrams
+fig, axes = plt.subplots(ncols=2, figsize=(18, 50), dpi=100)
+plt.tight_layout()
+
+sns.barplot(y=df_disaster_bigrams[0].values[:N], x=df_disaster_bigrams[1].values[:N], ax=axes[0], color='red')
+sns.barplot(y=df_nondisaster_bigrams[0].values[:N], x=df_nondisaster_bigrams[1].values[:N], ax=axes[1], color='green')
+
+for i in range(2):
+    axes[i].spines['right'].set_visible(False)
+    axes[i].set_xlabel('')
+    axes[i].set_ylabel('')
+    axes[i].tick_params(axis='x', labelsize=13)
+    axes[i].tick_params(axis='y', labelsize=13)
+
+axes[0].set_title(f'Top {N} most common bigrams in Disaster Tweets', fontsize=15)
+axes[1].set_title(f'Top {N} most common bigrams in Non-disaster Tweets', fontsize=15)
+
+plt.show()
+
+# %%
+### N-gram에서 Trigrams
+fig, axes = plt.subplots(ncols=2, figsize=(20, 50), dpi=100)
+
+sns.barplot(y=df_disaster_trigrams[0].values[:N], x=df_disaster_trigrams[1].values[:N], ax=axes[0], color='red')
+sns.barplot(y=df_nondisaster_trigrams[0].values[:N], x=df_nondisaster_trigrams[1].values[:N], ax=axes[1], color='green')
+
+for i in range(2):
+    axes[i].spines['right'].set_visible(False)
+    axes[i].set_xlabel('')
+    axes[i].set_ylabel('')
+    axes[i].tick_params(axis='x', labelsize=13)
+    axes[i].tick_params(axis='y', labelsize=11)
+
+
+axes[0].set_title(f'Top {N} most common trigrams in Disaster Tweets', fontsize=15)
+axes[1].set_title(f'Top {N} most common trigrams in Non-disaster Tweets', fontsize=15)
+
+plt.show()
+
+# %%
+## 4. Embeddings and Text Cleaning
+## 4.1 Embeddings Coverage
+
+
+
+
+
+# %%
+
+
+
+
+# %%
+
+# %%
+
+# %%
+
+# %%
+# practice cell
 
 display(df_train['text'].head())
 print(df_train['text'].apply(lambda x: len(str(x))).head())

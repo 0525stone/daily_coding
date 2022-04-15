@@ -13,7 +13,7 @@ Graph 객체 선언 방법
 
 Graph 종류
 - 빈도 확인 : distplot histogram countplot
-- 
+- 범주형 데이터(카테고리형 데이터) 분포 파악 : boxplot -> 최대값, 최소값, 1분위, 2분위, 3분위 값
 
 """
 
