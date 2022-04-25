@@ -28,7 +28,7 @@ def solution(progresses, speeds):
     answer = []
     
     # for progress, speed in zip(progresses, speeds):
-    while progresses:
+    while 1:
 
         temp = 0
         progress = progresses[0]
@@ -41,20 +41,23 @@ def solution(progresses, speeds):
 
         # progress update
         progresses = [p+s*day for p, s in zip(progresses, speeds)]
-        # print(progresses)
         temp_progresses = progresses.copy()
 
         for p in temp_progresses:
-            # print(f'{temp_progresses}\t\t{progresses}')
             if p>=100:
                 progresses.pop(0)
                 speeds.pop(0)
                 temp+=1
             else:
                 break
+        
         if temp:
             answer.append(temp)
-        # print(answer)
+        
+        # progress가 없으면 종료
+        if not progresses:
+            break
+
     return answer
 
 
