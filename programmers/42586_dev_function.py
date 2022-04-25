@@ -41,20 +41,20 @@ def solution(progresses, speeds):
 
         # progress update
         progresses = [p+s*day for p, s in zip(progresses, speeds)]
-        print(progresses)
+        # print(progresses)
         temp_progresses = progresses.copy()
 
         for p in temp_progresses:
-            print(p)
+            # print(f'{temp_progresses}\t\t{progresses}')
             if p>=100:
                 progresses.pop(0)
-                print(progresses)
+                speeds.pop(0)
                 temp+=1
             else:
                 break
         if temp:
             answer.append(temp)
-        print(answer)
+        # print(answer)
     return answer
 
 
