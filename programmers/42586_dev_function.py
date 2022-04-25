@@ -14,8 +14,6 @@ link : https://programmers.co.kr/learn/courses/30/lessons/42586
 작업 속도는 100 이하의 자연수입니다.
 배포는 하루에 한 번만 할 수 있으며, 하루의 끝에 이루어진다고 가정합니다. 예를 들어 진도율이 95%인 작업의 개발 속도가 하루에 4%라면 배포는 2일 뒤에 이루어집니다.
 
-
-
 """
 def solution(progresses, speeds):
     """
@@ -27,34 +25,34 @@ def solution(progresses, speeds):
     """
     answer = []
     
-    # for progress, speed in zip(progresses, speeds):
-    while progresses:
-
+    while 1:
         temp = 0
         progress = progresses[0]
         speed = speeds[0]
 
-        # progress day
+        # progress day   # ceil()로 하는게 더 나은 건가???? -> 바꿔서 제출해봤는데, 런타임에러 뜸
+        # day = math.ceil((100-progress)/speed)
         if (100-progress)%speed:
             day = (100-progress)//speed+1
         else: day = (100-progress)//speed
 
         # progress update
         progresses = [p+s*day for p, s in zip(progresses, speeds)]
-        # print(progresses)
         temp_progresses = progresses.copy()
 
         for p in temp_progresses:
-            # print(f'{temp_progresses}\t\t{progresses}')
             if p>=100:
                 progresses.pop(0)
                 speeds.pop(0)
                 temp+=1
             else:
                 break
-        if temp:
-            answer.append(temp)
-        # print(answer)
+        answer.append(temp)
+        
+        # 배포할 progress가 없으면 종료
+        if not progresses:
+            break
+
     return answer
 
 
