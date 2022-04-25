@@ -44,7 +44,6 @@ def solution(participant, completion):
     return participant[-1]
 
 
-
 def main():
     
     assert solution(["leo", "kiki", "eden"],["kiki", "eden"])=='leo'
