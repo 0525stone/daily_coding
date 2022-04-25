@@ -1,4 +1,6 @@
 """
+link : https://programmers.co.kr/learn/courses/30/lessons/42586
+
 문제 설명
 프로그래머스 팀에서는 기능 개선 작업을 수행 중입니다. 각 기능은 진도가 100%일 때 서비스에 반영할 수 있습니다.
 
@@ -16,15 +18,51 @@
 
 """
 def solution(progresses, speeds):
+    """
+    1. 제일 처음에 있는 것을 완료하는 시점에서,
+        (100-progress)/speed
+    2. 바로 뒤에 있는 것들이 100을 넘으면 pop 하고,
+    3. 아닌 것들을 갖고 1 시작
+    
+    """
     answer = []
+    
+    # for progress, speed in zip(progresses, speeds):
+    while progresses:
+
+        temp = 0
+        progress = progresses[0]
+        speed = speeds[0]
+
+        # progress day
+        if (100-progress)%speed:
+            day = (100-progress)//speed+1
+        else: day = (100-progress)//speed
+
+        # progress update
+        progresses = [p+s*day for p, s in zip(progresses, speeds)]
+        print(progresses)
+        temp_progresses = progresses.copy()
+
+        for p in temp_progresses:
+            print(p)
+            if p>=100:
+                progresses.pop(0)
+                print(progresses)
+                temp+=1
+            else:
+                break
+        if temp:
+            answer.append(temp)
+        print(answer)
     return answer
-
-
 
 
 def main():
     assert solution([93, 30, 55],[1, 30, 5])==[2,1]
+    print('first done')
     assert solution([95, 90, 99, 99, 80, 99],[1, 1, 1, 1, 1, 1])==[1,3,2]
+    print('second done')
 
 
 if __name__=="__main__":
