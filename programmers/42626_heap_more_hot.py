@@ -90,7 +90,7 @@ def make_scoville3(scoville, K):
     return answer
 
 
-# trial4
+# trial4 -> 효율성테스트 통과 못함
 def make_scoville4(scoville, K):
 
     answer = 0
@@ -117,11 +117,21 @@ def make_scoville4(scoville, K):
     return answer
 
 
-# trial4
+# trial5
 def make_scoville(scoville, K):
+    """
+    전체 array를 K를 기준으로 자르기?
+
+    
+    """
 
     answer = 0
+
+    scoville = [v for v in scoville if v<=K]
+
     num_scoville = len(scoville)
+
+
 
     # 모든 음식 스코빌 지수 K 이상 만들 수 없는 경우 -1 return 
     for _ in range(num_scoville):
@@ -139,7 +149,6 @@ def make_scoville(scoville, K):
         temp2 = scoville[0]
         scoville = scoville[1:]
         scoville.append(temp1 + (2*temp2))
-
 
     return answer
 
