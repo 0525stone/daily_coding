@@ -25,9 +25,9 @@ stages에는 1 이상 N + 1 이하의 자연수가 담겨있다.
 
 
 def update_stages(stages_dict, stage):
-
     for n in range(1,stage+1):
         stages_dict[n] += 1
+
     return stages_dict
 
 import numpy as np
@@ -48,25 +48,31 @@ def failure_rate(N, stages):
     print(f'arrived\t{stages_arrived}')
 
     # list 각 스테이지별 실패율
-    failure_list = [float(1-stages_stay[n]/stages_arrived[n]) for n in range(1,N+1)]
-    print(f'\t{failure_list}\t\t{type(failure_list[0])}')    
+    failure_list = [1 if stages_arrived[n]==0 else float(1-stages_stay[n]/stages_arrived[n]) for n in range(1,N+1)]  
+    # failure_list = [float(1-stages_stay[n]/stages_arrived[n]) for n in range(1,N+1)]  
 
     answer = np.argsort(failure_list)
     answer = [int(ans+1) for ans in answer]
-    print(answer)
-    print(type(answer))
-    # answer = np.ndarray.tolist(answer) 
-    # print(type(answer))
+    print(f'answer\t{answer}')
     return answer
 
 
 
 def main():
     assert failure_rate(5,[2, 1, 2, 6, 2, 4, 3, 3])==[3,4,2,1,5]
-    print('first done')
+    print('first done\n')
     assert failure_rate(4,[4,4,4,4,4])==[4,1,2,3]
-    print('second done')
-
+    print('second done\n')
+    # print(failure_rate(5,[4,4,2,2,5,3,6,3,2,1]))
+    assert failure_rate(5,[4,4,2,2,5,3,6,3,2,1])==[4, 5, 2, 3, 1]
+    print('third done\n')
+    # print(failure_rate(8,[1,1,1,1,1,1,1,1,1,1]))
+    assert failure_rate(8,[1,1,1,1,1,1,1,1,1,1])==[1, 2, 3, 4, 5, 6, 7, 8]
+    print('fourth done\n')
+    print(failure_rate(8,[9,9,9,9,9,9,9,9,9,9]))
+    print('fifth done\n')
+    print(failure_rate(10,[9,9,9,9,9,9,9,9,9,9]))
+    print('sixth done')
 
 if __name__=="__main__":
     main()
