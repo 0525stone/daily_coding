@@ -26,24 +26,37 @@ stages에는 1 이상 N + 1 이하의 자연수가 담겨있다.
 
 def update_stages(stages_dict, stage):
 
-    for n in range(1,stage):
+    for n in range(1,stage+1):
         stages_dict[n] += 1
     return stages_dict
 
-
+import numpy as np
 
 def failure_rate(N, stages):
     answer = []
 
-    stages_dict = {n : 0 for n in range(1,N+2)}
-    print(stages_dict)
+    stages_arrived = {n : 0 for n in range(1,N+2)}
+    stages_stay = {n : 0 for n in range(1,N+2)}
+    print(stages_arrived)
 
+    # stage 별 도착, stay에 대한 dictionary
     for stage in stages:
-        stages_dict = update_stages(stages_dict, stage)
-        
-    print(stages_dict)
+        stages_arrived = update_stages(stages_arrived, stage)
+        stages_stay[stage] += 1
     
+    print(f'stay\t{stages_stay}')   
+    print(f'arrived\t{stages_arrived}')
 
+    # list 각 스테이지별 실패율
+    failure_list = [int(100000*float(1-stages_stay[n]/stages_arrived[n])) for n in range(1,N+1)]
+    print(f'\t{failure_list}\t\t{type(failure_list[0])}')    
+
+    answer = np.argsort(failure_list)
+    answer = [int(ans+1) for ans in answer]
+    print(answer)
+    print(type(answer))
+    # answer = np.ndarray.tolist(answer) 
+    # print(type(answer))
     return answer
 
 
