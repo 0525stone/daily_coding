@@ -66,7 +66,10 @@ def make_scoville2(scoville, K):
 def make_scoville3(scoville, K):
 
     answer = 0
+
+    # scoville = [v for v in scoville if v<=K] # 이렇게 해도 시간초과 뜸
     num_scoville = len(scoville)
+
 
     # while 1:
     for _ in range(num_scoville):
