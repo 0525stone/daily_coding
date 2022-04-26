@@ -121,40 +121,35 @@ def make_scoville4(scoville, K):
 
 
 # trial5
+import heapq
+
 def make_scoville(scoville, K):
     """
     전체 array를 K를 기준으로 자르기?
-
-    
+        -> 큰차이를 보이지는 않음    
     """
 
     answer = 0
 
     scoville = [v for v in scoville if v<=K]
-
+    scoville.sort()
     num_scoville = len(scoville)
-
-
-
+ 
     # 모든 음식 스코빌 지수 K 이상 만들 수 없는 경우 -1 return 
     for _ in range(num_scoville):
 
-        scoville = sorted(scoville)
         # 이미 전부 만족하는 경우에는 return 0
         if scoville[0]>=K:
             return num_scoville - len(scoville)
 
-
-        temp1 = scoville[0]
-        scoville = scoville[1:]
+        temp1 = heapq.heappop(scoville) #temp1 = scoville[0]
         if not scoville:
             return -1
-        temp2 = scoville[0]
-        scoville = scoville[1:]
-        scoville.append(temp1 + (2*temp2))
+        temp2 = heapq.heappop(scoville)
+        heapq.heappush(scoville, (temp1+2*temp2))
+        # scoville.append(temp1 + (2*temp2))
 
     return answer
-
 
 def main():
     a = [5,1,3,27,2,4]
