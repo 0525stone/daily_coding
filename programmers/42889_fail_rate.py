@@ -48,7 +48,7 @@ def failure_rate(N, stages):
     print(f'arrived\t{stages_arrived}')
 
     # list 각 스테이지별 실패율
-    failure_list = [int(100000*float(1-stages_stay[n]/stages_arrived[n])) for n in range(1,N+1)]
+    failure_list = [float(1-stages_stay[n]/stages_arrived[n]) for n in range(1,N+1)]
     print(f'\t{failure_list}\t\t{type(failure_list[0])}')    
 
     answer = np.argsort(failure_list)
