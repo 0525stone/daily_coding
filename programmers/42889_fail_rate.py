@@ -21,9 +21,7 @@ stages에는 1 이상 N + 1 이하의 자연수가 담겨있다.
 
 """
 
-
-
-
+# trial 1
 def update_stages(stages_dict, stage):
     for n in range(1,stage+1):
         stages_dict[n] += 1
@@ -32,8 +30,9 @@ def update_stages(stages_dict, stage):
 
 import numpy as np
 
-def failure_rate(N, stages):
+def failure_rate1(N, stages):
     answer = []
+
 
     stages_arrived = {n : 0 for n in range(1,N+2)}
     stages_stay = {n : 0 for n in range(1,N+2)}
@@ -57,6 +56,53 @@ def failure_rate(N, stages):
     return answer
 
 
+# trial 2 이자 final 
+def failure_rate(N, stages):
+    answer = []
+    length = len(stages)
+
+    for i in range(1, N+1):
+        count = stages.count(i)
+
+        if length ==0:
+            fail = 0
+        else:
+            fail = count/length
+        length -= count
+
+        answer.append((i,fail))
+
+    answer = sorted(answer, key=lambda x: x[1], reverse = True)
+    answer = [i[0] for i in answer]
+
+    return answer
+
+
+
+# trial 3 실패(trial 2만 성공) -> 왜 failure을 1-fail로 하면 안될까??
+def failure_rate2(N, stages):
+    answer = []
+    length = len(stages)
+
+    for i in range(1, N+1):
+        count = stages.count(i)
+
+        if length ==0:
+            fail = 0
+        else:
+            fail = count/length
+        length -= count
+
+        answer.append(1-fail)
+        # answer.append(fail)
+
+    answer = np.argsort(answer)
+    # answer = sorted(answer, key=lambda x: x[1], reverse = True)
+    # answer = [i[0] for i in answer]
+    answer = [ans+1 for ans in answer]
+    
+
+    return answer
 
 def main():
     assert failure_rate(5,[2, 1, 2, 6, 2, 4, 3, 3])==[3,4,2,1,5]
@@ -70,9 +116,13 @@ def main():
     assert failure_rate(8,[1,1,1,1,1,1,1,1,1,1])==[1, 2, 3, 4, 5, 6, 7, 8]
     print('fourth done\n')
     print(failure_rate(8,[9,9,9,9,9,9,9,9,9,9]))
+    print(failure_rate2(8,[9,9,9,9,9,9,9,9,9,9]))
     print('fifth done\n')
     print(failure_rate(10,[9,9,9,9,9,9,9,9,9,9]))
+    print(failure_rate2(10,[9,9,9,9,9,9,9,9,9,9]))
     print('sixth done')
+    print(failure_rate(8,[1,2,4,5,6,8]))
+    print(failure_rate2(8,[1,2,4,5,6,8]))
 
 if __name__=="__main__":
     main()
