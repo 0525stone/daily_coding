@@ -30,8 +30,8 @@ def solution(progresses, speeds):
         progress = progresses[0]
         speed = speeds[0]
 
-        # progress day   # ceil()로 하는게 더 나은 건가???? -> 바꿔서 제출해봤는데, 런타임에러 뜸
-        # day = math.ceil((100-progress)/speed)
+        # progress day   
+        # day = math.ceil((100-progress)/speed)     # ceil()로 하는게 더 나은 건가???? -> 바꿔서 제출해봤는데, 기존엔 되었던 것들에서도 런타임에러 뜸
         if (100-progress)%speed:
             day = (100-progress)//speed+1
         else: day = (100-progress)//speed
