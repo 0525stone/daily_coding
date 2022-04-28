@@ -38,16 +38,25 @@ def target_number(numbers, target):
         # print(targets)
     answer = targets.count(target)
     # print(answer)
-
-
-
     return answer
 
+import random
+
+from numpy import number
 
 def generate_test_case():
+    """
+    제한사항
 
+    주어지는 숫자의 개수는 2개 이상 20개 이하입니다.
+    각 숫자는 1 이상 50 이하인 자연수입니다.
+    타겟 넘버는 1 이상 1000 이하인 자연수입니다.
+    """
+    num = random.randrange(2,21)
     
-    pass
+    numbers = [random.randrange(1,51) for _ in range(num)]
+    target = random.randrange(1,1001)
+    return numbers, target
 
 
 def main():
@@ -56,7 +65,13 @@ def main():
     assert target_number([4, 1, 2, 1], 4)==2
     print('second done')
 
-
+    for _ in range(20):
+        n1, t1 = generate_test_case()
+        print(f'random test case\nnumbers\t{n1}\ntarget\t{t1}')
+    
+    print('example test answer : ',target_number([9, 36, 15, 36, 8, 47, 19, 40, 14, 1, 46, 34, 34, 2, 34, 36, 18, 26, 29, 49], 159))
+    print('example test answer : ',target_number([11, 47, 38, 29, 23, 10, 36, 1, 29, 49],14))
+    
 
 if __name__=='__main__':
     main()
