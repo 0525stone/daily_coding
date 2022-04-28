@@ -16,15 +16,47 @@ n개의 음이 아닌 정수가 있습니다. 이 수를 적절히 더하거나 
 
 """
 
-def solution(numbers, target):
+def target_number(numbers, target):
+    """
+    queue 필요
+    - +먼저하고 -한 뒤에는 queue에서 빼냄 
+    
+    포인터 위치도 필요한가..?
+
+    끝까지 온 경우, target과 비교후 answer 더해줄지 말지 결정
+    
+
+    """
     answer = 0
+    targets = [0]
+    for num in numbers:
+        temp = []
+        for tgt in targets:
+            temp.append(tgt+num)
+            temp.append(tgt-num)
+        targets = temp
+        # print(targets)
+    answer = targets.count(target)
+    # print(answer)
 
 
 
     return answer
 
 
-numbers, target = [1, 1, 1, 1, 1],	3 # 5
-ans = solution(numbers, target)
-print(ans)
+def generate_test_case():
 
+    
+    pass
+
+
+def main():
+    assert target_number([1, 1, 1, 1, 1], 3)==5
+    print('first done')
+    assert target_number([4, 1, 2, 1], 4)==2
+    print('second done')
+
+
+
+if __name__=='__main__':
+    main()
