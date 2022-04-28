@@ -89,8 +89,6 @@ def make_biggest_num(numbers):
     1. numbers의 원소 갯수를 갖고, index를 정렬하여, 컴프리헨션으로 순서 바꾼 list만들고, join으로 하나의 string으로 합쳐주고 int() 크기 비교로 하는건 어떨까?
     2. 각 원소의 첫번째 숫자만 갖고 tuple, dictionary를 만들고, 숫자 크기 순으로 합치게 하여 크기 비교를 하는건 어떨까?
     """
-
-
     answer = '0'
     # 1. permutation
     numbers = [str(num) for num in numbers]
@@ -103,6 +101,7 @@ def make_biggest_num(numbers):
             answer = temp
             print(answer)
     return answer
+
     # # 2. 튜플 만들기. 첫글자, index
     # t_numbers = [(str(number)[0], idx) for idx, number in enumerate(numbers)]
     # print(t_numbers)
@@ -110,12 +109,8 @@ def make_biggest_num(numbers):
     # list_candidate = sorted(t_numbers, key=lambda x: x[0], reverse=True)
     # print(list_candidate)
 
-
     # for s in numbers:
     #     answer += s
-
-    
-
     # return answer
 
 
