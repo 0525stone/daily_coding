@@ -83,8 +83,25 @@ def solution11(numbers):
     return answer
 
 
-number = [6, 10, 2]	        # "6210"
-number = [3, 30, 34, 5, 9]	# "9534330"
+def make_biggest_num(numbers):
+    answer = ''
 
-ans = solution(number)
-print(ans)
+    
+    
+
+    return answer
+
+
+
+def main():
+
+
+    assert make_biggest_num([6, 10, 2])=="6210"
+    print('first done')
+
+    assert make_biggest_num([3, 30, 34, 5, 9])=="9534330"
+    print('second done')
+
+
+if __name__=='__main__':
+    main()
