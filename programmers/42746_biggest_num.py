@@ -83,23 +83,28 @@ def solution11(numbers):
     return answer
 
 
+
+# trial 1 : 시간 초과
 import itertools
-def make_biggest_num(numbers):
+def make_biggest_num1(numbers):
     """
     1. numbers의 원소 갯수를 갖고, index를 정렬하여, 컴프리헨션으로 순서 바꾼 list만들고, join으로 하나의 string으로 합쳐주고 int() 크기 비교로 하는건 어떨까?
-    2. 각 원소의 첫번째 숫자만 갖고 tuple, dictionary를 만들고, 숫자 크기 순으로 합치게 하여 크기 비교를 하는건 어떨까?
+    2. 각 원소의 첫번째 숫자만 갖고 tuple, dictionary를 만들고, 숫자 크기 순으로 합치게 하여 크기 비교를 하는건 어떨까? -> 안좋은 듯
     """
     answer = '0'
     # 1. permutation
     numbers = [str(num) for num in numbers]
     perm_list = list(itertools.permutations(numbers, len(numbers)))
-    print(perm_list)
-
+    perm_list = sorted(perm_list, reverse=True)
+    # print(perm_list)
+    
     for p in perm_list:
         temp = ''.join(p)
+        if perm_list[0][0]!=p[0][0]:
+            break
         if int(temp)>int(answer):
             answer = temp
-            print(answer)
+            # print(answer)
     return answer
 
     # # 2. 튜플 만들기. 첫글자, index
@@ -113,9 +118,66 @@ def make_biggest_num(numbers):
     #     answer += s
     # return answer
 
+# trail 2
+
+def sort_num_cluster(cluster):
+    print(f'sort num cluster\t{cluster}')
+    answer = '0'
+    numbers = [str(num) for num in cluster]
+    perm_list = list(itertools.permutations(numbers, len(numbers)))
+    # print(perm_list)
+    for p in perm_list:
+        temp = ''.join(p)
+        # print(temp)
+        # if perm_list[0][0]!=p[0][0]:
+        #     break
+        if int(temp)>int(answer):
+            answer = temp
+    print(answer)
+    return answer
+
+
+def make_biggest_num(numbers):
+    """
+    1부터 9까지 각각 군집을 만들어서 그 안에서 sort 해주고, 전체 다 합쳐주는 식으로 하면?
+    
+    각 군집에 대하여, 제일 큰 수를 뽑아주는 걸 확인하는 코드
+    """
+    # make number cluster   - make_num_cluster
+    numbers = [str(number) for number in numbers]
+    num_dict = {str(i):[] for i in range(9,0,-1)}
+
+    # 이걸 comprehension 으로 할 수 있나??
+    for number in numbers:
+        num_dict[number[0]].append(number)
+    # print(num_dict)
+
+    temp = []
+    for d in num_dict.keys():
+        if num_dict[d]:
+            num_dict[d] = sorted(num_dict[d], reverse=True)
+            # temp.extend(num_dict[d])
+            sorted_num_dict = sort_num_cluster(num_dict[d])
+            temp.extend(sorted_num_dict)
+    print(temp)
+
+
+    answer = ''.join(temp)
+    # print(answer)
+    return answer
 
 
 def main():
+
+    # sort num cluster test
+    assert (sort_num_cluster([60,6,6523,67,659]))=="676659652360"
+
+    print('sort num cluster test done')
+
+
+
+    assert make_biggest_num([60,6,5,67])=="676605"
+    print('third done')
 
     print(make_biggest_num([6, 10, 2]))
     assert make_biggest_num([6, 10, 2])=="6210"
@@ -123,6 +185,9 @@ def main():
 
     assert make_biggest_num([3, 30, 34, 5, 9])=="9534330"
     print('second done')
+
+    
+
 
 
 if __name__=='__main__':
