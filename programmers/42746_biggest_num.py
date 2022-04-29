@@ -165,11 +165,19 @@ def make_biggest_num2(numbers):
 
 def make_biggest_num(numbers):
     numbers_str = [str(number) for number in numbers]
+    print(f'{numbers_str}\t{type(numbers_str)}')
     numbers_str.sort(key=lambda num: num*3, reverse=True)
+    print(numbers_str)
     return str(int(''.join(numbers_str)))
 
 
 def main():
+    samp = ['998998998','8181', '9']
+    print(samp)
+    new_samp = samp.sort(key=lambda num: num*3, reverse=True)
+    print(new_samp)
+    new_samp1 = sorted(samp, reverse=True)
+    print(new_samp1)
 
     # sort num cluster test
     temp = sort_num_cluster([60,6,6523,67,659])
