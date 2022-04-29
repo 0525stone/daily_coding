@@ -119,25 +119,23 @@ def make_biggest_num1(numbers):
     # return answer
 
 # trail 2
-
 def sort_num_cluster(cluster):
     print(f'sort num cluster\t{cluster}')
     answer = '0'
     numbers = [str(num) for num in cluster]
     perm_list = list(itertools.permutations(numbers, len(numbers)))
-    # print(perm_list)
+    answer2return = []
     for p in perm_list:
         temp = ''.join(p)
-        # print(temp)
-        # if perm_list[0][0]!=p[0][0]:
-        #     break
+    
         if int(temp)>int(answer):
             answer = temp
-    print(answer)
-    return answer
+            answer2return = list(p)
+    print(f'after sort num cluster\t{answer2return}')
+    return answer2return
 
 
-def make_biggest_num(numbers):
+def make_biggest_num2(numbers):
     """
     1부터 9까지 각각 군집을 만들어서 그 안에서 sort 해주고, 전체 다 합쳐주는 식으로 하면?
     
@@ -155,8 +153,6 @@ def make_biggest_num(numbers):
     temp = []
     for d in num_dict.keys():
         if num_dict[d]:
-            num_dict[d] = sorted(num_dict[d], reverse=True)
-            # temp.extend(num_dict[d])
             sorted_num_dict = sort_num_cluster(num_dict[d])
             temp.extend(sorted_num_dict)
     print(temp)
@@ -170,11 +166,10 @@ def make_biggest_num(numbers):
 def main():
 
     # sort num cluster test
-    assert (sort_num_cluster([60,6,6523,67,659]))=="676659652360"
+    temp = sort_num_cluster([60,6,6523,67,659])
+    assert ''.join(temp)=="676659652360"
 
     print('sort num cluster test done')
-
-
 
     assert make_biggest_num([60,6,5,67])=="676605"
     print('third done')
