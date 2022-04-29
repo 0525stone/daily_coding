@@ -163,6 +163,12 @@ def make_biggest_num2(numbers):
     return answer
 
 
+def make_biggest_num(numbers):
+    numbers_str = [str(number) for number in numbers]
+    numbers_str.sort(key=lambda num: num*3, reverse=True)
+    return str(int(''.join(numbers_str)))
+
+
 def main():
 
     # sort num cluster test
