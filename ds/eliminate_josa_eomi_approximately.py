@@ -14,16 +14,16 @@ def eliminate_josa_eomi_approximately_mecab():
 
 
 # TODO : 이름이 이게 맞는지.. 이 프로그램 안에서는 조사,어미만 읽어오는 것이니까 이렇게 하는게 맞을까?
-def read_josa_eomi(filename='./data/JosaEomi/EOMI.TXT'):
+def read_josa_eomi(filename='./data/JosaEomi/JOSA.TXT'):
     # JosaEomi/ EOMI.TXT  JOSA.TXT
     with open(filename,'r', encoding='euc-kr') as f:
-        dumps = f.read()
-        dump = dumps.split('\n')
+        word_dumps = f.read()
+        word_dump = word_dumps.split('\n')
         
         # if에 사용할 eomi 조건문으로 사용하기 위한 문자열
-        eomi_if = '|'.join(dump[:-1])
+        dump4if = '|'.join(word_dump[:-1])
     
-    return dump[:-1], eomi_if  # 마지막에 공백 문자가 있어서 그것은 제외시켜줘야함
+    return word_dump[:-1], dump4if  # 마지막에 공백 문자가 있어서 그것은 제외시켜줘야함
 
 
 def eliminate_josa_eomi_approximately_regex_ifor(text, subs1='', subs2=''):
@@ -39,9 +39,7 @@ def eliminate_josa_eomi_approximately_regex_ifor(text, subs1='', subs2=''):
 
 
 
-def eliminate_josa_eomi_approximately_regex_loop(text, sub1='', sub2=''):
-    result = ''
-
+def eliminate_josa_eomi_approximately_regex_loop(text, sub1='', sub2=''):\
     # for문으로 일일이 조사어미와 비교하여 제거
     # 입력 text와 eomi, josa를 비교하여 없는 것들 제거
     for sub in sub1:
@@ -68,11 +66,12 @@ def eliminate_josa_eomi_approximately_regex_loop(text, sub1='', sub2=''):
             text = re.sub(f'{sub} ', ' ', text)
             print(f'after {text}')
 
-    return text
+    return text.strip()
 
 
 
 def test_josa_eomi():
+
     # test : read_josa_eomi()  => 직접 일일이 셀 수 없으니까, txt 파일의 line 수로 확인
     eomis, eomis_if = read_josa_eomi('./data/JosaEomi/EOMI.TXT')
     assert len(eomis)==744
@@ -81,21 +80,22 @@ def test_josa_eomi():
     print('read_josa_eomi test done')
     
 
-    # test final result
+    # test : eliminating josa/eomi
     """
     1. test를 할 때, 처음에는 josas 만으로 잘 제거하는지 확인\
     2. eomis, josas 전부로 test 해볼 것
     3. context(문장들) 단위로 test 해볼 것
     """
-    texts = ['알코올 의존증을 치료할 생각이 있을쏘냐?', '자전거 여행을 가고 싶다.',  '거짓말로 들통 났다.', '현수는 술주정뱅이다.',]
-    answers = ['알코올 의존증 치료할 생각 있을쏘냐 ', '자전거 여행 가 싶 ', '거짓말 들통 났 ', '현수 술주정뱅 ' ,]  # 술주정뱅이=>술주정뱅
+    texts = ['알코올 의존증을 치료할 생각이 있을쏘냐?', '자전거 여행을 가고 싶다.',  '거짓말로 들통 났다.', '현수는 술주정뱅이다.', '주의가 부족했다.']
+    answers = ['알코올 의존증 치료할 생각 있을쏘냐', '자전거 여행 가 싶', '거짓말 들통 났', '현수 술주정뱅' , '주의 부족했']  # 술주정뱅이=>술주정뱅
+
+    # # eliminate_josa_eomi_approximately_regex_loop 는 폐기(for 문으로 돌리는 것은 말이 안됨)    
+    # for text, answer in zip(texts, answers):
+    #     assert eliminate_josa_eomi_approximately_regex_loop(text, josas)==answer
     
     for text, answer in zip(texts, answers):
         assert eliminate_josa_eomi_approximately_regex_ifor(text, josas_if)==answer
 
-    for text, answer in zip(texts, answers):
-        assert eliminate_josa_eomi_approximately_regex_loop(text, josas)==answer
-    
     print('current test cases done')
 
 
