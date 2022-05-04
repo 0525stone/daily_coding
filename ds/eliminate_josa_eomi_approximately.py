@@ -21,7 +21,7 @@ def read_josa_eomi(filename='./data/JosaEomi/JOSA.TXT'):
         word_dump = word_dumps.split('\n')
         
         # if에 사용할 eomi 조건문으로 사용하기 위한 문자열
-        dump4if = '|'.join(word_dump[:-1])
+        dump4if = ' |'.join(word_dump[:-1])
     
     return word_dump[:-1], dump4if  # 마지막에 공백 문자가 있어서 그것은 제외시켜줘야함
 
@@ -60,19 +60,38 @@ def eliminate_josa_eomi_approximately_regex_loop(text, sub1='', sub2=''):\
 def eliminate_josa_eomi_approximately_regex_ifor(text, subs1='', subs2=''):
     """
     subs1, subs2 는 불용어들을 '|'로 묶어논 문자열 
+
+    선택 
+    - subs1,2를 불용어를 포함한 리스트형으로 받아야할 지
+    - subs1,2를 불용어를 포함한 | 연산자로 묶인 문자열로 받아야할 지
     """
-    result = ''
+    # preprocess for sentence
+    text = re.sub(r"([?.,!¿])", " ", text) 
+    
+    print(f'before\t{text}')
+    
+    if subs2:
+        """
+        subs1, subs2를 하나로 묶어서 큰 뭉태기 만들어야함
+        """
+        # combine subs1, subs2
+        subs1_raw = set(subs1.split(' |'))
+        subs2_raw = set(subs2.split(' |'))
+        subs3_raw = subs1_raw | subs2_raw
+        print(f'subs1\t{len(subs1_raw)}\tsubs2\t{len(subs2_raw)}\tsubs3\t{len(subs3_raw)}')
+        subs3 = ' |'.join(subs3_raw)
+        text = re.sub(subs3, ' ', text)
+
+        print(f'after2\t{text}')
+    else:
+        text = re.sub(subs1, ' ', text)
+        print(f'after1\t{text}')
 
 
-
-    return result
-
+    return text.strip()
 
 
-
-
-
-
+# 사실상 main
 def test_josa_eomi():
 
     # test : read_josa_eomi()  => 직접 일일이 셀 수 없으니까, txt 파일의 line 수로 확인
@@ -90,16 +109,21 @@ def test_josa_eomi():
     3. context(문장들) 단위로 test 해볼 것
     """
     texts = ['알코올 의존증을 치료할 생각이 있을쏘냐?', '자전거 여행을 가고 싶다.',  '거짓말로 들통 났다.', '현수는 술주정뱅이다.', '주의가 부족했다.']
-    answers = ['알코올 의존증 치료할 생각 있을쏘냐', '자전거 여행 가 싶', '거짓말 들통 났', '현수 술주정뱅' , '주의 부족했']  # 술주정뱅이=>술주정뱅
+    answers_josa = ['알코올 의존증 치료할 생각 있을쏘냐', '자전거 여행 가 싶', '거짓말 들통 났', '현수 술주정뱅' , '주의 부족했']  # 술주정뱅이=>술주정뱅
+    answers_josa_eomi = ['알코올 의존증 치료할 생각 있', '자전거 여행 가 싶', '거짓말 들통 났', '현수 술주정뱅' , '주의 부족했']  # 술주정뱅이=>술주정뱅
 
     # # eliminate_josa_eomi_approximately_regex_loop 는 폐기(for 문으로 돌리는 것은 말이 안됨)    
     # for text, answer in zip(texts, answers):
     #     assert eliminate_josa_eomi_approximately_regex_loop(text, josas)==answer
     
-    for text, answer in zip(texts, answers):
+    for text, answer in zip(texts, answers_josa):
         assert eliminate_josa_eomi_approximately_regex_ifor(text, josas_if)==answer
+    print('only josa elimination test is done')
 
-    print('current test cases done')
+    for text, answer in zip(texts, answers_josa_eomi):
+        assert eliminate_josa_eomi_approximately_regex_ifor(text, eomis_if, josas_if)==answer
+
+    print('current test cases all done')
 
 
 if __name__=="__main__":
