@@ -23,16 +23,23 @@ def read_josa_eomi(filename='./data/JosaEomi/EOMI.TXT'):
         # if에 사용할 eomi 조건문으로 사용하기 위한 문자열
         eomi_if = '|'.join(dump[:-1])
     
-    return dump[:-1]  # 마지막에 공백 문자가 있어서 그것은 제외시켜줘야함
+    return dump[:-1], eomi_if  # 마지막에 공백 문자가 있어서 그것은 제외시켜줘야함
+
+
+def eliminate_josa_eomi_approximately_regex_ifor(text, subs1='', subs2=''):
+    """
+    subs1, subs2 는 불용어들을 '|'로 묶어논 문자열 
+    """
+    result = ''
+
+
+
+    return result
+
+
 
 
 def eliminate_josa_eomi_approximately_regex_loop(text, sub1='', sub2=''):
-    """
-    인터페이스 
-    - 인자로 어미,조사 입력으로 줘야함
-    - 함수자체로 동작하게끔
-    
-    """
     result = ''
 
     # for문으로 일일이 조사어미와 비교하여 제거
@@ -67,9 +74,9 @@ def eliminate_josa_eomi_approximately_regex_loop(text, sub1='', sub2=''):
 
 def test_josa_eomi():
     # test : read_josa_eomi()  => 직접 일일이 셀 수 없으니까, txt 파일의 line 수로 확인
-    eomis = read_josa_eomi('./data/JosaEomi/EOMI.TXT')
+    eomis, eomis_if = read_josa_eomi('./data/JosaEomi/EOMI.TXT')
     assert len(eomis)==744
-    josas = read_josa_eomi('./data/JosaEomi/JOSA.TXT')
+    josas, josas_if = read_josa_eomi('./data/JosaEomi/JOSA.TXT')
     assert len(josas)==429
     print('read_josa_eomi test done')
     
@@ -83,6 +90,9 @@ def test_josa_eomi():
     texts = ['알코올 의존증을 치료할 생각이 있을쏘냐?', '자전거 여행을 가고 싶다.',  '거짓말로 들통 났다.', '현수는 술주정뱅이다.',]
     answers = ['알코올 의존증 치료할 생각 있을쏘냐 ', '자전거 여행 가 싶 ', '거짓말 들통 났 ', '현수 술주정뱅 ' ,]  # 술주정뱅이=>술주정뱅
     
+    for text, answer in zip(texts, answers):
+        assert eliminate_josa_eomi_approximately_regex_ifor(text, josas_if)==answer
+
     for text, answer in zip(texts, answers):
         assert eliminate_josa_eomi_approximately_regex_loop(text, josas)==answer
     
