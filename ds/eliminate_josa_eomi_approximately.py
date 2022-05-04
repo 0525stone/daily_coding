@@ -26,19 +26,6 @@ def read_josa_eomi(filename='./data/JosaEomi/JOSA.TXT'):
     return word_dump[:-1], dump4if  # 마지막에 공백 문자가 있어서 그것은 제외시켜줘야함
 
 
-def eliminate_josa_eomi_approximately_regex_ifor(text, subs1='', subs2=''):
-    """
-    subs1, subs2 는 불용어들을 '|'로 묶어논 문자열 
-    """
-    result = ''
-
-
-
-    return result
-
-
-
-
 def eliminate_josa_eomi_approximately_regex_loop(text, sub1='', sub2=''):\
     # for문으로 일일이 조사어미와 비교하여 제거
     # 입력 text와 eomi, josa를 비교하여 없는 것들 제거
@@ -67,6 +54,22 @@ def eliminate_josa_eomi_approximately_regex_loop(text, sub1='', sub2=''):\
             print(f'after {text}')
 
     return text.strip()
+
+
+
+def eliminate_josa_eomi_approximately_regex_ifor(text, subs1='', subs2=''):
+    """
+    subs1, subs2 는 불용어들을 '|'로 묶어논 문자열 
+    """
+    result = ''
+
+
+
+    return result
+
+
+
+
 
 
 
