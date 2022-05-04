@@ -74,11 +74,10 @@ def eliminate_josa_eomi_approximately_regex_ifor(text, subs1='', subs2=''):
         """
         subs1, subs2를 하나로 묶어서 큰 뭉태기 만들어야함
         """
-        # combine subs1, subs2
+        # combine subs1, subs2 to subs3
         subs1_raw = set(subs1.split(' |'))
         subs2_raw = set(subs2.split(' |'))
         subs3_raw = subs1_raw | subs2_raw
-        print(f'subs1\t{len(subs1_raw)}\tsubs2\t{len(subs2_raw)}\tsubs3\t{len(subs3_raw)}')
         subs3 = ' |'.join(subs3_raw)
         text = re.sub(subs3, ' ', text)
 
@@ -111,10 +110,6 @@ def test_josa_eomi():
     texts = ['알코올 의존증을 치료할 생각이 있을쏘냐?', '자전거 여행을 가고 싶다.',  '거짓말로 들통 났다.', '현수는 술주정뱅이다.', '주의가 부족했다.']
     answers_josa = ['알코올 의존증 치료할 생각 있을쏘냐', '자전거 여행 가 싶', '거짓말 들통 났', '현수 술주정뱅' , '주의 부족했']  # 술주정뱅이=>술주정뱅
     answers_josa_eomi = ['알코올 의존증 치료할 생각 있', '자전거 여행 가 싶', '거짓말 들통 났', '현수 술주정뱅' , '주의 부족했']  # 술주정뱅이=>술주정뱅
-
-    # # eliminate_josa_eomi_approximately_regex_loop 는 폐기(for 문으로 돌리는 것은 말이 안됨)    
-    # for text, answer in zip(texts, answers):
-    #     assert eliminate_josa_eomi_approximately_regex_loop(text, josas)==answer
     
     for text, answer in zip(texts, answers_josa):
         assert eliminate_josa_eomi_approximately_regex_ifor(text, josas_if)==answer
@@ -125,6 +120,22 @@ def test_josa_eomi():
 
     print('current test cases all done')
 
+    long_context = ['분명 툭툭 던지는 말에 불과한데도, 그 속에 핵심이 있다.', 
+    '인공지능은 동적 컴퓨팅 환경에 내장된 알고리즘을 생성하고, 적용하여 인간의 지능을 모방하는 기초 지능입니다.',
+    '']
+    long_answer =  []
+
+    for context in long_context:
+        print(eliminate_josa_eomi_approximately_regex_ifor(context, josas_if, eomis_if))
+
+
+
+
+
+
+    # # eliminate_josa_eomi_approximately_regex_loop 는 폐기(for 문으로 돌리는 것은 말이 안됨)    
+    # for text, answer in zip(texts, answers):
+    #     assert eliminate_josa_eomi_approximately_regex_loop(text, josas)==answer
 
 if __name__=="__main__":
     test_josa_eomi()
