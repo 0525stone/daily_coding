@@ -67,7 +67,7 @@ def eliminate_josa_eomi_approximately_regex_ifor(text, subs1='', subs2=''):
     - subs1,2를 불용어를 포함한 | 연산자로 묶인 문자열로 받아야할 지
     """
     # preprocess for sentence
-    # text = re.sub(r"([?.,!¿])", " ", text) 
+    text = re.sub(r"([?.,!¿])", " ", text) 
     # text = re.sub(r'"','',text)
     
     print(f'before\t{text}')
@@ -82,7 +82,10 @@ def eliminate_josa_eomi_approximately_regex_ifor(text, subs1='', subs2=''):
         subs3_raw = subs1_raw | subs2_raw
         subs3 = ' |'.join(subs3_raw)
         text = re.sub(subs3, ' ', text)
-
+        
+        pat = f"[{subs3}][?.,!¿]"
+        
+        text = re.sub(pat, ' ', text)
         print(f'after2\t{text}')
     else:
         text = re.sub(subs1, ' ', text)
@@ -95,13 +98,23 @@ def eliminate_josa_eomi_approximately_regex_ifor(text, subs1='', subs2=''):
 # 사실상 main
 def test_josa_eomi():
 
+    # text1 = '이건 되야하는데.'
+    # pat1 = '데'
+    # assert re.sub(f'{pat1}','',text1)=='이건 되야하는.'
+
+    # print('\n성공\n')
+    # assert False
+
+
+
     # test : read_josa_eomi()  => 직접 일일이 셀 수 없으니까, txt 파일의 line 수로 확인
     eomis, eomis_if = read_josa_eomi('./data/JosaEomi/EOMI.TXT')
     assert len(eomis)==744
     josas, josas_if = read_josa_eomi('./data/JosaEomi/JOSA.TXT')
     assert len(josas)==429
     print('read_josa_eomi test done')
-    
+
+
 
     # test : eliminating josa/eomi
     """
@@ -112,7 +125,7 @@ def test_josa_eomi():
     """
     texts = ['알코올 의존증을 치료할 생각이 있을쏘냐?', '자전거 여행을 가고 싶다.',  '거짓말로 들통 났다.', '현수는 술주정뱅이다.', '주의가 부족했다.']
     answers_josa = ['알코올 의존증 치료할 생각 있을쏘냐', '자전거 여행 가 싶', '거짓말 들통 났', '현수 술주정뱅' , '주의 부족했']  # 술주정뱅이=>술주정뱅
-    answers_josa_eomi = ['알코올 의존증 치료할 생각 있?', '자전거 여행 가 싶', '거짓말 들통 났', '현수 술주정뱅' , '주의 부족했']  # 술주정뱅이=>술주정뱅
+    answers_josa_eomi = ['알코올 의존증 치료할 생각 있', '자전거 여행 가 싶', '거짓말 들통 났', '현수 술주정뱅' , '주의 부족했']  # 술주정뱅이=>술주정뱅
     
     for text, answer in zip(texts, answers_josa):
         assert eliminate_josa_eomi_approximately_regex_ifor(text, josas_if)==answer
