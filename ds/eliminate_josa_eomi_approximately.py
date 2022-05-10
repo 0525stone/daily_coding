@@ -83,15 +83,11 @@ def eliminate_josa_eomi_approximately_regex_ifor(text, subs1='', subs2=''):
         subs3_raw = subs1_raw | subs2_raw
         subs3 = ' |'.join(subs3_raw)
         text = re.sub(subs3, ' ', text)
-        
-        pat = f"[{subs3}][?.,!¿]"
-        
-        text = re.sub(pat, ' ', text)
+
         print(f'after2\t{text}')
     else:
         text = re.sub(subs1, ' ', text)
         print(f'after1\t{text}')
-
 
     return text.strip()
 
