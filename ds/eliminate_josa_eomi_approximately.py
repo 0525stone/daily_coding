@@ -26,7 +26,7 @@ def read_josa_eomi(filename='./data/JosaEomi/JOSA.TXT'):
     return word_dump[:-1], dump4if  # 마지막에 공백 문자가 있어서 그것은 제외시켜줘야함
 
 
-def eliminate_josa_eomi_approximately_regex_loop(text, sub1='', sub2=''):\
+def eliminate_josa_eomi_approximately_regex_loop(text, sub1='', sub2=''):
     # for문으로 일일이 조사어미와 비교하여 제거
     # 입력 text와 eomi, josa를 비교하여 없는 것들 제거
     for sub in sub1:
@@ -43,6 +43,7 @@ def eliminate_josa_eomi_approximately_regex_loop(text, sub1='', sub2=''):\
         따라서, or구문으로 전체를 잡아서 해줘야 깔끔하게 사라질 것으로 예상..
         또는 불용어 부분을 /와 같은 특수문자로 바꿔놓고 마지막에 특수문자를 제거하는 식으로 해도 될 듯
         """
+        # 문장 부호 빈칸으로 바꿈
         text = re.sub(r".", " ", text) 
         # text = re.sub(r"([?.,!¿])", " ", text) 
         # text = re.sub(r'\n', ' ',text)
