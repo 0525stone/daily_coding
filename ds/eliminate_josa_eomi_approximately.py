@@ -1,7 +1,12 @@
 #-*- coding: utf-8 -*-
 """
-1. interface 규정 - eliminate_josa_eomi_approximately(context) = eliminated_context
+current status in 220512
+- corpus가 들어오면 문장부호들을 전부 제거함.
+- 조사어미의 경우 단어의 끝부분이므로, 해당 패턴과 빈칸하나를 포함한 것을 re.sub로 바꿔줌
+- 문장부호를 그대로 두고 조사어미만 바꾸는 것은 고민중
 
+1. interface 규정 - eliminate_josa_eomi_approximately(context) = eliminated_context
+2. test case 추가 - 단순한 test부터 예외적인 test case들 추가
 """
 import re
 
@@ -115,7 +120,7 @@ def test_josa_eomi():
 
     # test : eliminating josa/eomi
     """
-    1. test를 할 때, 처음에는 josas 만으로 잘 제거하는지 확인\
+    1. test를 할 때, 처음에는 josas 만으로 잘 제거하는지 확인 
     2. eomis, josas 전부로 test 해볼 것
     3. context(문장들) 단위로 test 해볼 것
     * 문장부호는 지울 필요 없음 어미, 조사만 지우면 됨
@@ -140,10 +145,6 @@ def test_josa_eomi():
 
     for context in long_context:
         print(eliminate_josa_eomi_approximately_regex_ifor(context, josas_if, eomis_if))
-
-
-
-
 
 
     # # eliminate_josa_eomi_approximately_regex_loop 는 폐기(for 문으로 돌리는 것은 말이 안됨)    
