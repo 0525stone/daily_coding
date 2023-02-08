@@ -1,0 +1,37 @@
+"""
+스택/큐
+
+다리를 지나는 트럭 문제
+"""
+def solution(bridge_length, weight, truck_weights):
+    answer = 0
+
+    bridge = [0]*bridge_length
+    while sum(bridge)!=0 or truck_weights:
+        if truck_weights:
+            if (sum(bridge)+truck_weights[0])<=weight:
+                bridge.pop(0)
+                bridge.append(truck_weights[0])
+                truck_weights.pop(0)
+                assert len(bridge)==bridge_length
+        else:
+            bridge.pop(0)
+            bridge.append(0)
+        answer+=1
+    return answer
+
+
+
+if __name__=="__main__":
+
+    bridge_length, weight, truck_weights = 2, 10, [7,4,5,6]
+    answer = solution(bridge_length, weight, truck_weights)
+    assert answer==8, answer
+
+    bridge_length, weight, truck_weights = 100, 100, [10]
+    answer = solution(bridge_length, weight, truck_weights)
+    assert answer==101, answer
+
+    bridge_length, weight, truck_weights = 100, 100, [10,10,10,10,10,10,10,10,10,10]
+    answer = solution(bridge_length, weight, truck_weights)
+    assert answer==110, answer
