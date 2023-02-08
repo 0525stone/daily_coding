@@ -10,9 +10,8 @@ def solution(bridge_length, weight, truck_weights):
     while truck_weights:
         bridge.pop(0)
         if (sum(bridge)+truck_weights[0])<=weight:
-            bridge.append(truck_weights[0])
-            truck_weights.pop(0)
-            assert len(bridge)==bridge_length
+            bridge.append(truck_weights.pop(0))
+            # assert len(bridge)==bridge_length
         else:
             bridge.append(0)
         answer+=1
