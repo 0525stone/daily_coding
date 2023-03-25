@@ -37,6 +37,14 @@ def solution(n, edge):
 
 if __name__=="__main__":
     
+
+    for i in range(4):
+        re = i+1
+        for _ in range(3):
+            re = re*(i+_)
+            print(re)
+
+
     # test case 추가해서 답 확인해주기
     n, edge = 6,	[[3, 6], [4, 3], [3, 2], [1, 3], [1, 2], [2, 4], [5, 2]]
     answer=solution(n, edge)

@@ -16,21 +16,50 @@ def solution(rectangle, characterX, characterY, itemX, itemY):
 
     
     """
+    MAX = 50
     answer = 0
-    q = deque([characterX, characterY, 0])
-
-    while 1:
-
-
-
-        if cx==itemX and cy==itemY:
-            return answer
-
-    check_rec(rectangle, characterX, characterY)
-        
-
-
+    maps = make_map(rectangle, characterX,characterY)
+    q = deque([(characterX, characterY, 0)])
+    visited = [[0 for _ in range(MAX)] for _ in range(MAX)]
+    visited[characterX][characterY] = 1
+    dx, dy = [1, -1, 0, 0], [0, 0, 1, -1]
+    while q:
+        x, y, d = q.popleft()
+        if x==itemX and y==itemY:
+            answer = d
+            break
+        for k in range(4):
+            nx = x+dx[k]
+            ny = y+dy[k]
+            if visited[nx][ny]==0 and maps[nx][ny]==1:
+                q.append([nx,ny,d+1])
+                visited[nx][ny] = visited[x][y]+1
     return answer
+
+
+
+    # while 1:
+    #     # 종료 조건
+    #     if cx==itemX and cy==itemY:
+    #         return answer
+    return answer
+
+def make_map(rectangle, characterX,characterY, MAX = 50):
+    
+    maps = [[9 for _ in range(MAX)] for __ in range(MAX)]
+    for rec in rectangle:
+        x1, y1, x2, y2 = rec
+        for i in range(x1, x2+1):
+            for j in range(y1, y2+1):
+                if x1 < i < x2 and y1 < j < y2:
+                    maps[i][j] = 0
+                elif maps[i][j] != 0:
+                    maps[i][j] = 1
+
+    print(maps)
+
+    return maps
+
 
 def check_rec(rectangle, characterX, characterY):
     pass
