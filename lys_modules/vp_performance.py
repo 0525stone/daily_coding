@@ -38,16 +38,16 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
             with open(os.path.join(result_path, result_filename)) as f_result:
                 gt_line = f_gt.readlines()
                 if len(gt_line)==3:
-                    # 
+                    assert len(gt1)==len(gt2), f"gt1 : {len(gt1)}   gt2 : {len(gt2)}"
                     gt1 = gt_line[1].replace('  ',' ').strip().split(' ')
                     gt2 = gt_line[2].replace('  ',' ').strip().split(' ')
                     gt1 = [float(i) for i in gt1]
                     gt2 = [float(i) for i in gt2]
                     print(f"{gt1}\t{type(gt1)}")
                     print(f"{gt2}\t{type(gt2)}")
-                    vp_x, vp_y = find_vp_gt(gt1, gt2)  # TODO : vp_x, vp_y 검증 필요. 선이랑 점 다 그려보면 됨 => 손으로 그려봤는데 맞음
+                    vp_x, vp_y = find_vp_gt(gt1, gt2)  # Done by 수기 : vp_x, vp_y 검증 필요. 선이랑 점 다 그려보면 됨 => 손으로 그려봤는데 맞음
                     print(f"vp_x, vp_y {vp_x} {vp_y}")
-                    assert len(gt1)==len(gt2), f"gt1 : {len(gt1)}   gt2 : {len(gt2)}"
+                    
                     
                 else:   # 혹시 모를 상황
                     assert 0, f"need to check gt file name: {gt_filename}"
