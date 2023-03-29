@@ -18,6 +18,7 @@ class VP:
     def draw_line(self, pt1, pt2):
         # cv2.line(self.img, (pt1, pt2))
         pass
+    
     def show(self, windowname="result"):
         cv2.imshow("result", self.img)
         cv2.waitKey(-1) # TODO : 입력 키에 따라서 저장할지 넘길지에 대한 옵션도 줄 수 있음
@@ -25,12 +26,9 @@ class VP:
 def main():
     print("EDA")
     filename = "/Users/johnlee/git/daily_coding/data/gt/2311.jpg"
-
     vp = VP(filename)
-
     vp.show()
     
-
 
 if __name__=="__main__":
     main()
