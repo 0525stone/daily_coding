@@ -52,7 +52,8 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
             with open(os.path.join(result_path, result_filename)) as f_result:
                 gt_line = f_gt.readlines()
                 if len(gt_line)==3:
-                    w = gt_line[0].replace().split(' ')
+                    w = gt_line[0].strip().replace('  ',' ').split(' ')
+                    w = [int(_) for _ in w]
                     print(f"width : {w}")
                     gt1 = gt_line[1].replace('  ',' ').replace('  ',' ').strip().split(' ')   # TODO : pseudo로 공백들에 대하여 수정해줌
                     gt2 = gt_line[2].replace('  ',' ').replace('  ',' ').strip().split(' ')
