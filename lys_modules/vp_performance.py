@@ -6,6 +6,19 @@ prefix로 각 파일에 대해 directory, prefix 설정하여 읽어오기
 import os
 import cv2
 
+import math
+
+def score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y):
+    pass
+
+def score_pixel_consistency(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y):
+    score_pc = 0
+
+
+
+    return score_pc
+
+
 def find_vp_gt(gt1, gt2):
     assert len(gt1)==4, f"gt1 has less than 4 components({len(gt1)})"
     gt1 = [int(i) for i in gt1]
@@ -32,33 +45,46 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
     gt_files = sorted([f for f in gt_files if f.endswith(".txt")])
     result_files = sorted([f for f in result_files if f.endswith(".txt")])
 
+    score = []
     for gt_filename, result_filename in zip(gt_files, result_files):
         print(f"{gt_filename}, {result_filename}")
         with open(os.path.join(gt_path, gt_filename), 'r') as f_gt:
             with open(os.path.join(result_path, result_filename)) as f_result:
                 gt_line = f_gt.readlines()
                 if len(gt_line)==3:
-                    assert len(gt1)==len(gt2), f"gt1 : {len(gt1)}   gt2 : {len(gt2)}"
-                    gt1 = gt_line[1].replace('  ',' ').strip().split(' ')
-                    gt2 = gt_line[2].replace('  ',' ').strip().split(' ')
+                    w = gt_line[0].replace().split(' ')
+                    print(f"width : {w}")
+                    gt1 = gt_line[1].replace('  ',' ').replace('  ',' ').strip().split(' ')   # TODO : pseudo로 공백들에 대하여 수정해줌
+                    gt2 = gt_line[2].replace('  ',' ').replace('  ',' ').strip().split(' ')
+                    assert len(gt1)==len(gt2), f"gt1 : {len(gt1)}   gt2 : {len(gt2)}, \n{gt1}\n{gt2}\n{gt_line}"
+
                     gt1 = [float(i) for i in gt1]
                     gt2 = [float(i) for i in gt2]
-                    print(f"{gt1}\t{type(gt1)}")
-                    print(f"{gt2}\t{type(gt2)}")
-                    vp_x, vp_y = find_vp_gt(gt1, gt2)  # Done by 수기 : vp_x, vp_y 검증 필요. 선이랑 점 다 그려보면 됨 => 손으로 그려봤는데 맞음
-                    print(f"vp_x, vp_y {vp_x} {vp_y}")
-                    
+                    gt_vp_x, gt_vp_y = find_vp_gt(gt1, gt2)  # Done by 수기 : vp_x, vp_y 검증 필요. 선이랑 점 다 그려보면 됨 => 손으로 그려봤는데 맞음
+                    print(f"vp_x, vp_y {gt_vp_x} {gt_vp_y}")
+
+                    # 읽어들인 result에서 값 추출
+                    result_line = f_result.readlines()
+                    result_line = result_line[0].strip().split(',')
+                    pred_vp_x, pred_vp_y = float(result_line[5]), float(result_line[6])
+                    print(f"result : {pred_vp_x}\t{pred_vp_y}\n{result_line}")
+
+                    # TODO : gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y 이렇게 네개로 누적 점수를 구하는 것이지
+                    score_pc = score_pixel_consistency(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y)
+                    score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y)
+
+                    score.append(score_pc)
                     
                 else:   # 혹시 모를 상황
                     assert 0, f"need to check gt file name: {gt_filename}"
                     # continue # TODO : continue를 하더라도 어떤 것을 패스했는지는 알아야하니 변수하나에 담아야함
-                # print(f"{f_result.readlines()}")  # [0]를 해야 text 접근 => split(",")  => [6, 7] 이 좌표인듯?
+
                 print()
                 
                 
 
 
-    print(f"gt files : {len(gt_files)}\nres files : {len(result_files)} ")
+    print(f"gt files : {len(gt_files)}\nres files : {len(result_files)}\nscore : {len(score)}")
 
 def main():
     print("VP performance code")
