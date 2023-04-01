@@ -9,20 +9,49 @@ import cv2
 import math
 import numpy as np
 
+def vectorize(point_x, point_y, w):
+    """
+    w => w,h
+    """
+    cx = w[0]/2
+    cy = w[1]/2
+    f = w[0]/2
+    vector = [int((point_x-cx)/f), int((point_y-cy)/f), 1]
+    return vector
+
 def score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w):
-    print(f"To get AA in width {w}\ngt\t{gt_vp_x},{gt_vp_y}\nresult\t{pred_vp_x},{pred_vp_y}")
+    """
+    vp_vector : [(vp_x-cx)/f, (vp_y-cy)/f, 1]
+    gt_vector : [(gt_x-cx)/f, (gt_y-cy)/f, 1]
+    cx = w/2
+    cy = h/2
+    """
+    # print(f"To get AA in width {w}\ngt\t{gt_vp_x},{gt_vp_y}\nresult\t{pred_vp_x},{pred_vp_y}")
     f = w[0]//2 # 몫을 구함
     w = np.array(w)
 
     vpts = [pred_vp_x, pred_vp_y]
-    vpts = np.array(vpts)
-    degree = np.min(np.arccos(np.abs(vpts @ w).clip(max=1)))
+    vector_vp = vectorize(pred_vp_x, pred_vp_y, w)
+    gpts = [gt_vp_x, gt_vp_y]
+    vector_gt = vectorize(gt_vp_x, gt_vp_y, w)
 
-    gtvp = [gt_vp_x, gt_vp_y]
-    gtvp = np.array(gtvp)
-    degree_gt = np.min(np.arccos(np.abs(gtvp @ w).clip(max=1)))
-    
-    print(f"vp degree : {degree}\ngt degree : {degree_gt}")
+    # vpts = np.array(vpts)
+    # gpts = np.array(gpts)
+
+    # neurvps 에 있는 식
+    degree = np.min(np.arccos(np.abs(vpts @ w).clip(max=1)))
+    degree_gt = np.min(np.arccos(np.abs(gpts @ w).clip(max=1)))    
+    # print(f"vp degree : {degree}\ngt degree : {degree_gt}")
+
+    # 교수님 그림에 따른 식 
+    vpts_f = vpts/w[0]
+    gpts_f = gpts/w[0]
+
+    vpgt_dot = (vpts_f @ gpts_f).clip(max=1)
+    degree_ = np.arccos(vpgt_dot)
+    print(f'교수님 식 결과 {degree_*np.pi}')
+
+
 
 def score_pixel_consistency(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y):
     score_pc = 0
