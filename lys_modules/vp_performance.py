@@ -7,9 +7,22 @@ import os
 import cv2
 
 import math
+import numpy as np
 
-def score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y):
-    pass
+def score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w):
+    print(f"To get AA in width {w}\ngt\t{gt_vp_x},{gt_vp_y}\nresult\t{pred_vp_x},{pred_vp_y}")
+    f = w[0]//2 # 몫을 구함
+    w = np.array(w)
+
+    vpts = [pred_vp_x, pred_vp_y]
+    vpts = np.array(vpts)
+    degree = np.min(np.arccos(np.abs(vpts @ w).clip(max=1)))
+
+    gtvp = [gt_vp_x, gt_vp_y]
+    gtvp = np.array(gtvp)
+    degree_gt = np.min(np.arccos(np.abs(gtvp @ w).clip(max=1)))
+    
+    print(f"vp degree : {degree}\ngt degree : {degree_gt}")
 
 def score_pixel_consistency(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y):
     score_pc = 0
@@ -72,7 +85,7 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
 
                     # TODO : gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y 이렇게 네개로 누적 점수를 구하는 것이지
                     score_pc = score_pixel_consistency(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y)
-                    score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y)
+                    score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w)
 
                     score.append(score_pc)
                     
