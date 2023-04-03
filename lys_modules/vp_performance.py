@@ -112,10 +112,6 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
                     # continue # TODO : continue를 하더라도 어떤 것을 패스했는지는 알아야하니 변수하나에 담아야함
     f_save.close()
 
-                
-                
-
-
     print(f"gt files : {len(gt_files)}\nres files : {len(result_files)}\nscore : {len(score)}")
 
 def main():
