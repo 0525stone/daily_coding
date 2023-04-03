@@ -27,11 +27,8 @@ def score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w):
     cy = h/2
     """
     # print(f"To get AA in width {w}\ngt\t{gt_vp_x},{gt_vp_y}\nresult\t{pred_vp_x},{pred_vp_y}")
-    f = w[0]//2 # 몫을 구함
     w = np.array(w)
-    # vpts = [pred_vp_x, pred_vp_y]
     vector_vp = vectorize(pred_vp_x, pred_vp_y, w)
-    # gpts = [gt_vp_x, gt_vp_y]
     vector_gt = vectorize(gt_vp_x, gt_vp_y, w)
 
     dot_gt_vp = (np.array(vector_vp) @ np.array(vector_gt))#.clip(max=1)
