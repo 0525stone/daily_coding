@@ -29,35 +29,19 @@ def score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w):
     # print(f"To get AA in width {w}\ngt\t{gt_vp_x},{gt_vp_y}\nresult\t{pred_vp_x},{pred_vp_y}")
     f = w[0]//2 # 몫을 구함
     w = np.array(w)
-
-    vpts = [pred_vp_x, pred_vp_y]
+    # vpts = [pred_vp_x, pred_vp_y]
     vector_vp = vectorize(pred_vp_x, pred_vp_y, w)
-    gpts = [gt_vp_x, gt_vp_y]
+    # gpts = [gt_vp_x, gt_vp_y]
     vector_gt = vectorize(gt_vp_x, gt_vp_y, w)
 
-    # vpts = np.array(vpts)
-    # gpts = np.array(gpts)
-
-    # neurvps 에 있는 식
-    degree = np.min(np.arccos(np.abs(vpts @ w).clip(max=1)))
-    degree_gt = np.min(np.arccos(np.abs(gpts @ w).clip(max=1)))    
-    # print(f"vp degree : {degree}\ngt degree : {degree_gt}")
-
-    # 교수님 그림에 따른 식 
-    vpts_f = vpts/w[0]
-    gpts_f = gpts/w[0]
-
-    vpgt_dot = (vpts_f @ gpts_f).clip(max=1)
-    degree_ = np.arccos(vpgt_dot)
-    print(f'교수님 식 결과 {degree_*np.pi}')
-
+    dot_gt_vp = (np.array(vector_vp) @ np.array(vector_gt))#.clip(max=1)
+    degree = np.arccos(dot_gt_vp)
+    # print(f"degree\t{degree}")
+    return degree
 
 
 def score_pixel_consistency(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y):
     score_pc = 0
-
-
-
     return score_pc
 
 
@@ -86,17 +70,20 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
     result_files = os.listdir(result_path)
     gt_files = sorted([f for f in gt_files if f.endswith(".txt")])
     result_files = sorted([f for f in result_files if f.endswith(".txt")])
+    aa_threshold = 10
+
+    f_save = open('data/result.txt','w')
+    f_save.write(f"filename,gt_x,gt_y,pred_x,pred_y,degree\n")
 
     score = []
     for gt_filename, result_filename in zip(gt_files, result_files):
-        print(f"{gt_filename}, {result_filename}")
         with open(os.path.join(gt_path, gt_filename), 'r') as f_gt:
             with open(os.path.join(result_path, result_filename)) as f_result:
                 gt_line = f_gt.readlines()
                 if len(gt_line)==3:
                     w = gt_line[0].strip().replace('  ',' ').split(' ')
                     w = [int(_) for _ in w]
-                    print(f"width : {w}")
+                    # print(f"{gt_filename}, {result_filename}\timage size : {w}")
                     gt1 = gt_line[1].replace('  ',' ').replace('  ',' ').strip().split(' ')   # TODO : pseudo로 공백들에 대하여 수정해줌
                     gt2 = gt_line[2].replace('  ',' ').replace('  ',' ').strip().split(' ')
                     assert len(gt1)==len(gt2), f"gt1 : {len(gt1)}   gt2 : {len(gt2)}, \n{gt1}\n{gt2}\n{gt_line}"
@@ -104,25 +91,27 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
                     gt1 = [float(i) for i in gt1]
                     gt2 = [float(i) for i in gt2]
                     gt_vp_x, gt_vp_y = find_vp_gt(gt1, gt2)  # Done by 수기 : vp_x, vp_y 검증 필요. 선이랑 점 다 그려보면 됨 => 손으로 그려봤는데 맞음
-                    print(f"vp_x, vp_y {gt_vp_x} {gt_vp_y}")
 
                     # 읽어들인 result에서 값 추출
                     result_line = f_result.readlines()
                     result_line = result_line[0].strip().split(',')
                     pred_vp_x, pred_vp_y = float(result_line[5]), float(result_line[6])
-                    print(f"result : {pred_vp_x}\t{pred_vp_y}\n{result_line}")
+                    # print(f"vp_x, vp_y {gt_vp_x}, {gt_vp_y}\tresult : {pred_vp_x}, {pred_vp_y}")
 
                     # TODO : gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y 이렇게 네개로 누적 점수를 구하는 것이지
-                    score_pc = score_pixel_consistency(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y)
-                    score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w)
-
-                    score.append(score_pc)
+                    # score_pc = score_pixel_consistency(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y)
+                    aa_degree = score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w)
+                    if aa_degree<aa_threshold:
+                        # print(f'aa degree : {aa_degree}')
+                        print(f"aa degree : {aa_degree}\tvp_x, vp_y {int(gt_vp_x)}, {int(gt_vp_y)}\tresult : {int(pred_vp_x)}, {int(pred_vp_y)}")
+                    f_save.write(f"{gt_filename},{gt_vp_x},{gt_vp_y},{pred_vp_x},{pred_vp_y},{aa_degree}\n")
+                    score.append(aa_degree)
                     
                 else:   # 혹시 모를 상황
                     assert 0, f"need to check gt file name: {gt_filename}"
                     # continue # TODO : continue를 하더라도 어떤 것을 패스했는지는 알아야하니 변수하나에 담아야함
+    f_save.close()
 
-                print()
                 
                 
 
