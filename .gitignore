@@ -11,3 +11,6 @@ ds/result_kju.csv
 ds/.ipynb_checkpoints
 .DS_Store
 twim/*.ipynb
+*.txt
+data/*
+data/gt/*
