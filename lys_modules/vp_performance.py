@@ -32,8 +32,7 @@ def score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w):
     vector_gt = vectorize(gt_vp_x, gt_vp_y, w)
 
     dot_gt_vp = (np.array(vector_vp) @ np.array(vector_gt))#.clip(max=1)
-    degree = np.arccos(dot_gt_vp)
-    # print(f"degree\t{degree}")
+    degree = np.arccos(dot_gt_vp)*180/np.pi
     return degree
 
 
@@ -67,13 +66,17 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
     result_files = os.listdir(result_path)
     gt_files = sorted([f for f in gt_files if f.endswith(".txt")])
     result_files = sorted([f for f in result_files if f.endswith(".txt")])
-    aa_threshold = 10
+    aa_threshold = 6
 
     f_save = open('data/result.txt','w')
     f_save.write(f"filename,gt_x,gt_y,pred_x,pred_y,degree\n")
 
     score = []
+    total = 0
+    good = 0
+    bad = 0
     for gt_filename, result_filename in zip(gt_files, result_files):
+        total+=1
         with open(os.path.join(gt_path, gt_filename), 'r') as f_gt:
             with open(os.path.join(result_path, result_filename)) as f_result:
                 gt_line = f_gt.readlines()
@@ -101,6 +104,9 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
                     if aa_degree<aa_threshold:
                         # print(f'aa degree : {aa_degree}')
                         print(f"aa degree : {aa_degree}\tvp_x, vp_y {int(gt_vp_x)}, {int(gt_vp_y)}\tresult : {int(pred_vp_x)}, {int(pred_vp_y)}")
+                        good += 1
+                    else:
+                        bad += 1
                     f_save.write(f"{gt_filename},{gt_vp_x},{gt_vp_y},{pred_vp_x},{pred_vp_y},{aa_degree}\n")
                     score.append(aa_degree)
                     
@@ -108,6 +114,7 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
                     assert 0, f"need to check gt file name: {gt_filename}"
                     # continue # TODO : continue를 하더라도 어떤 것을 패스했는지는 알아야하니 변수하나에 담아야함
     f_save.close()
+    print(f"total : {total}\ngood : {good}\nbad : {bad}\naccuracy : {good/total*100}%")
 
     print(f"gt files : {len(gt_files)}\nres files : {len(result_files)}\nscore : {len(score)}")
 
@@ -115,7 +122,13 @@ def main():
     print("VP performance code")
     gt_path="data/gt"
     result_path="data/result"
-    vp_performance(gt_path, result_path,result_prefix="ava_")
+    print(f"{os.listdir('data')}\n{os.listdir('.')}")
+
+    gt_files = os.listdir(gt_path)
+    result_files = os.listdir(result_path)
+
+    print(f"{gt_files[:11]}\n{result_files[:11]}\n{gt_path}\n{result_path}")
+    vp_performance(gt_path, result_path,result_prefix="flickr_")
 
 
 if __name__=="__main__":
