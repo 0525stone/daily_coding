@@ -137,6 +137,7 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
     f_save.close()
     err = np.sort(np.array(err))
     y = (1 + np.arange(len(err))) / total / total # len(loader) / n => 각각 을 len(loader), n 으로 
+    print(y)
     AA_graph(err, y)
     print(f"total : {total}\ngood : {good}\nbad : {bad}\naccuracy : {good/total*100}%")
 
