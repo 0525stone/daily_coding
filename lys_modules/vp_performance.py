@@ -8,6 +8,25 @@ import cv2
 
 import math
 import numpy as np
+import matplotlib.pyplot as plt
+
+def AA(x, y, threshold):
+    """
+    x : degree 전체를 모아 놓은 것
+    y :   y = (1 + np.arange(len(err))) / len(loader) / n
+        n : vpts 수  => 소실점의 수(데이터 수랑 같을 것 같은데?)
+        len(loader) => 데이터(이미지)의 수
+    """
+    index = np.searchsorted(x, threshold)
+    x = np.concatenate([x[:index], [threshold]])
+    y = np.concatenate([y[:index], [threshold]])
+    return ((x[1:] - x[:-1]) * y[:-1]).sum() / threshold
+
+def AA_graph(err, y):
+    plt.plot(err, y, label="Conic")
+    print(" | ".join([f"{AA(err, y, th):.3f}" for th in [0.5, 1, 2, 5, 10, 20]]))
+    plt.legend()
+    plt.show()
 
 def vectorize(point_x, point_y, w):
     """
@@ -15,7 +34,7 @@ def vectorize(point_x, point_y, w):
     """
     cx = w[0]/2
     cy = w[1]/2
-    f = w[0]/2
+    f = 1#w[0]/2
     vector = [int((point_x-cx)/f), int((point_y-cy)/f), 1]
     return vector
 
@@ -32,7 +51,7 @@ def score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w):
     vector_gt = vectorize(gt_vp_x, gt_vp_y, w)
 
     dot_gt_vp = (np.array(vector_vp) @ np.array(vector_gt))#.clip(max=1)
-    degree = np.arccos(dot_gt_vp)*180/np.pi
+    degree = np.arccos(dot_gt_vp)*180/np.pi # neurvps 에서는 err로 되어있는 변수
     return degree
 
 
@@ -75,6 +94,7 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
     total = 0
     good = 0
     bad = 0
+    err = []
     for gt_filename, result_filename in zip(gt_files, result_files):
         total+=1
         with open(os.path.join(gt_path, gt_filename), 'r') as f_gt:
@@ -101,6 +121,7 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
                     # TODO : gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y 이렇게 네개로 누적 점수를 구하는 것이지
                     # score_pc = score_pixel_consistency(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y)
                     aa_degree = score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w)
+                    err.append(aa_degree)
                     if aa_degree<aa_threshold:
                         # print(f'aa degree : {aa_degree}')
                         print(f"aa degree : {aa_degree}\tvp_x, vp_y {int(gt_vp_x)}, {int(gt_vp_y)}\tresult : {int(pred_vp_x)}, {int(pred_vp_y)}")
@@ -114,6 +135,9 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
                     assert 0, f"need to check gt file name: {gt_filename}"
                     # continue # TODO : continue를 하더라도 어떤 것을 패스했는지는 알아야하니 변수하나에 담아야함
     f_save.close()
+    err = np.sort(np.array(err))
+    y = (1 + np.arange(len(err))) / total / total # len(loader) / n => 각각 을 len(loader), n 으로 
+    AA_graph(err, y)
     print(f"total : {total}\ngood : {good}\nbad : {bad}\naccuracy : {good/total*100}%")
 
     print(f"gt files : {len(gt_files)}\nres files : {len(result_files)}\nscore : {len(score)}")
