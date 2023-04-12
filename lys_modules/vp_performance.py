@@ -22,8 +22,26 @@ def AA(x, y, threshold):
     y = np.concatenate([y[:index], [threshold]])
     return ((x[1:] - x[:-1]) * y[:-1]).sum() / threshold
 
-def AA_graph(err, y):
+def AA_graph(err, y, threshold=5):
+    aa_list = []
+    th_list = []
+    print(err[:10])
+    for th in range(0,threshold*10,1):
+        th = th/10
+        for idx, e in enumerate(err):
+            if e>th: # err 를 정렬하였기 때문에, 
+                break
+        
+        aa = (len(err)-idx+1)/len(err)
+        th_list.append(th)
+        aa_list.append(aa)
+        print(f"aa accuracy : {idx} {aa}")
+        
+
+
+
     plt.plot(err, y, label="Conic")
+    print(f"x,y length : {len(err)}\t{len(y)}")
     print(" | ".join([f"{AA(err, y, th):.3f}" for th in [0.5, 1, 2, 5, 10, 20]]))
     plt.legend()
     plt.show()
@@ -38,8 +56,9 @@ def vectorize(point_x, point_y, w):
     vector = [int((point_x-cx)/f), int((point_y-cy)/f), 1]
     return vector
 
-def score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w):
+def get_degree(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w):
     """
+    getting degree among two vectors
     vp_vector : [(vp_x-cx)/f, (vp_y-cy)/f, 1]
     gt_vector : [(gt_x-cx)/f, (gt_y-cy)/f, 1]
     cx = w/2
@@ -53,12 +72,6 @@ def score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w):
     dot_gt_vp = (np.array(vector_vp) @ np.array(vector_gt))#.clip(max=1)
     degree = np.arccos(dot_gt_vp)*180/np.pi # neurvps 에서는 err로 되어있는 변수
     return degree
-
-
-def score_pixel_consistency(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y):
-    score_pc = 0
-    return score_pc
-
 
 def find_vp_gt(gt1, gt2):
     assert len(gt1)==4, f"gt1 has less than 4 components({len(gt1)})"
@@ -75,7 +88,6 @@ def find_vp_gt(gt1, gt2):
     vp_y = (a1*c2-a2*c1)/(a2*b1-a1*b2)
 
     return vp_x, vp_y
-
 
 def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
     """
@@ -119,8 +131,7 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
                     # print(f"vp_x, vp_y {gt_vp_x}, {gt_vp_y}\tresult : {pred_vp_x}, {pred_vp_y}")
 
                     # TODO : gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y 이렇게 네개로 누적 점수를 구하는 것이지
-                    # score_pc = score_pixel_consistency(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y)
-                    aa_degree = score_AA(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w)
+                    aa_degree = get_degree(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w)
                     err.append(aa_degree)
                     if aa_degree<aa_threshold:
                         # print(f'aa degree : {aa_degree}')
@@ -136,8 +147,8 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
                     # continue # TODO : continue를 하더라도 어떤 것을 패스했는지는 알아야하니 변수하나에 담아야함
     f_save.close()
     err = np.sort(np.array(err))
-    y = (1 + np.arange(len(err))) / total / total # len(loader) / n => 각각 을 len(loader), n 으로 
-    print(y)
+    y = (1 + np.arange(len(err))) / total# / total # len(loader) / n => 각각 을 len(loader), n 으로 
+    print(f'{total}\t{y}')
     AA_graph(err, y)
     print(f"total : {total}\ngood : {good}\nbad : {bad}\naccuracy : {good/total*100}%")
 
