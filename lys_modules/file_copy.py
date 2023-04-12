@@ -8,6 +8,8 @@ root - 000 - file.file
 아직 3중 4중이나 다른 다양한 형태에 대한 코드는 없음
 """
 
+
+# 이중으로 [폴더]-[폴더이름].jpg 이런식으로 있는 구조일 경우
 files_root = "J:/git/DeepGuider/bin/data/YorkUrbanDB"
 file_list = os.listdir(files_root)
 dst_root = 'J:/git/DeepGuider/bin/data/YUD'
