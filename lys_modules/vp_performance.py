@@ -22,27 +22,30 @@ def AA(x, y, threshold):
     y = np.concatenate([y[:index], [threshold]])
     return ((x[1:] - x[:-1]) * y[:-1]).sum() / threshold
 
-def AA_graph(err, y, threshold=5):
+def AA_graph(err, y, threshold=200):
     aa_list = []
     th_list = []
     print(err[:10])
     for th in range(0,threshold*10,1):
-        th = th/10
+        th = th/100
+        print(f"threshold {th}")
         for idx, e in enumerate(err):
-            if e>th: # err 를 정렬하였기 때문에, 
+            if e<th: # err 를 정렬하였기 때문에, 
+                # print(f"check\t{e} {th} {err[idx-1]}")
                 break
         
         aa = (len(err)-idx+1)/len(err)
         th_list.append(th)
         aa_list.append(aa)
         print(f"aa accuracy : {idx} {aa}")
+    plt.plot(th_list, aa_list, label="Conic")
         
 
 
 
-    plt.plot(err, y, label="Conic")
-    print(f"x,y length : {len(err)}\t{len(y)}")
-    print(" | ".join([f"{AA(err, y, th):.3f}" for th in [0.5, 1, 2, 5, 10, 20]]))
+    # plt.plot(err, y, label="Conic")
+    # print(f"x,y length : {len(err)}\t{len(y)}")
+    # print(" | ".join([f"{AA(err, y, th):.3f}" for th in [0.5, 1, 2, 5, 10, 20]]))
     plt.legend()
     plt.show()
 
@@ -52,7 +55,7 @@ def vectorize(point_x, point_y, w):
     """
     cx = w[0]/2
     cy = w[1]/2
-    f = 1#w[0]/2
+    f = w[0]/2
     vector = [int((point_x-cx)/f), int((point_y-cy)/f), 1]
     return vector
 
@@ -135,7 +138,7 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
                     err.append(aa_degree)
                     if aa_degree<aa_threshold:
                         # print(f'aa degree : {aa_degree}')
-                        print(f"aa degree : {aa_degree}\tvp_x, vp_y {int(gt_vp_x)}, {int(gt_vp_y)}\tresult : {int(pred_vp_x)}, {int(pred_vp_y)}")
+                        # print(f"aa degree : {aa_degree}\tvp_x, vp_y {int(gt_vp_x)}, {int(gt_vp_y)}\tresult : {int(pred_vp_x)}, {int(pred_vp_y)}")
                         good += 1
                     else:
                         bad += 1
