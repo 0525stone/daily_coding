@@ -28,17 +28,23 @@ def AA_graph(err, y, threshold=200):
     print(err[:10])
     for th in range(0,threshold*10,1):
         th = th/100
-        print(f"threshold {th}")
+        # print(f"threshold {th}")
         for idx, e in enumerate(err):
             if e<th: # err 를 정렬하였기 때문에, 
-                # print(f"check\t{e} {th} {err[idx-1]}")
+                # print(f"check\t{idx}\t{e} {th} {err[idx]}")
+                aa = (len(err)-idx+1)/len(err)
+                th_list.append(th)
+                aa_list.append(aa)
+                # print(f"aa accuracy : {idx} {aa}")
                 break
         
-        aa = (len(err)-idx+1)/len(err)
-        th_list.append(th)
-        aa_list.append(aa)
-        print(f"aa accuracy : {idx} {aa}")
+        # aa = (len(err)-idx+1)/len(err)
+        # th_list.append(th)
+        # aa_list.append(aa)
+        # print(f"aa accuracy : {idx} {aa}")
+        # print(f"err {}")
     plt.plot(th_list, aa_list, label="Conic")
+    print(f"err {err[:10]}")
         
 
 
@@ -56,8 +62,9 @@ def vectorize(point_x, point_y, w):
     cx = w[0]/2
     cy = w[1]/2
     f = w[0]/2
-    vector = [int((point_x-cx)/f), int((point_y-cy)/f), 1]
-    return vector
+    vector = [(point_x-cx)/f, (point_y-cy)/f, 1]
+    norm = np.sqrt(vector[0]*vector[0]+vector[1]*vector[1]+1)
+    return vector/norm
 
 def get_degree(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w):
     """
@@ -72,7 +79,7 @@ def get_degree(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w):
     vector_vp = vectorize(pred_vp_x, pred_vp_y, w)
     vector_gt = vectorize(gt_vp_x, gt_vp_y, w)
 
-    dot_gt_vp = (np.array(vector_vp) @ np.array(vector_gt))#.clip(max=1)
+    dot_gt_vp = (np.array(vector_vp) @ np.array(vector_gt)) # .clip(max=1)
     degree = np.arccos(dot_gt_vp)*180/np.pi # neurvps 에서는 err로 되어있는 변수
     return degree
 
@@ -138,9 +145,10 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
                     err.append(aa_degree)
                     if aa_degree<aa_threshold:
                         # print(f'aa degree : {aa_degree}')
-                        # print(f"aa degree : {aa_degree}\tvp_x, vp_y {int(gt_vp_x)}, {int(gt_vp_y)}\tresult : {int(pred_vp_x)}, {int(pred_vp_y)}")
+                        # print(f"good case {aa_degree}", gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y)
                         good += 1
                     else:
+                        print(f"bad case {aa_degree}", gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y)
                         bad += 1
                     f_save.write(f"{gt_filename},{gt_vp_x},{gt_vp_y},{pred_vp_x},{pred_vp_y},{aa_degree}\n")
                     score.append(aa_degree)
@@ -149,7 +157,7 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
                     assert 0, f"need to check gt file name: {gt_filename}"
                     # continue # TODO : continue를 하더라도 어떤 것을 패스했는지는 알아야하니 변수하나에 담아야함
     f_save.close()
-    err = np.sort(np.array(err))
+    err = -np.sort(-np.array(err))
     y = (1 + np.arange(len(err))) / total# / total # len(loader) / n => 각각 을 len(loader), n 으로 
     print(f'{total}\t{y}')
     AA_graph(err, y)
@@ -162,8 +170,8 @@ def main():
     drive_name = 'J'
     dataset_gt_dir = {'ava' : f'{drive_name}:\git\DeepGuider\\bin\data\\tmm17\\vp-labels\AVA_landscape', 'flickr' : f'{drive_name}:\git\DeepGuider\\bin\data\\tmm17\\flickr', 'su3' : '../DeepGuider/bin/su3_'}
     dataset_pred_dir = {'ava' : f'{drive_name}:\git\DeepGuider\\bin\\result_ava', 'flickr' : f'{drive_name}:\git\DeepGuider\\bin\\result_flickr', 'su3' : '../DeepGuider/bin/result_su3_101'}
-    # dataset = "ava"
-    dataset = "flickr"
+    dataset = "ava"
+    # dataset = "flickr"
 
     gt_path="data/gt"
     result_path="data/result"
