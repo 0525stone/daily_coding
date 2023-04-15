@@ -159,8 +159,9 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
 
 def main():
     print("VP performance code")
-    dataset_gt_dir = {'ava' : 'D:\git\DeepGuider\\bin\data\\tmm17\\vp-labels\AVA_landscape', 'flickr' : 'D:\git\DeepGuider\\bin\data\\tmm17\\flickr', 'su3' : '../DeepGuider/bin/su3_'}
-    dataset_pred_dir = {'ava' : 'D:\git\DeepGuider\\bin\\result_ava', 'flickr' : 'D:\git\DeepGuider\\bin\\result_flickr', 'su3' : '../DeepGuider/bin/result_su3_101'}
+    drive_name = 'J'
+    dataset_gt_dir = {'ava' : f'{drive_name}:\git\DeepGuider\\bin\data\\tmm17\\vp-labels\AVA_landscape', 'flickr' : f'{drive_name}:\git\DeepGuider\\bin\data\\tmm17\\flickr', 'su3' : '../DeepGuider/bin/su3_'}
+    dataset_pred_dir = {'ava' : f'{drive_name}:\git\DeepGuider\\bin\\result_ava', 'flickr' : f'{drive_name}:\git\DeepGuider\\bin\\result_flickr', 'su3' : '../DeepGuider/bin/result_su3_101'}
     # dataset = "ava"
     dataset = "flickr"
 
