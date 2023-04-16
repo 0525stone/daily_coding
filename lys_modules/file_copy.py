@@ -9,24 +9,24 @@ root - 000 - file.file
 """
 
 
-# 이중으로 [폴더]-[폴더이름].jpg 이런식으로 있는 구조일 경우
-files_root = "J:/git/DeepGuider/bin/data/YorkUrbanDB"
-file_list = os.listdir(files_root)
-dst_root = 'J:/git/DeepGuider/bin/data/YUD'
-for f in file_list:
-    if '.' not in f:
-        filename = f"{f}.jpg"
-        from_filename = f"{files_root}/{f}/{filename}"
-        to_filename = f"{dst_root}/{filename}"
-        print(f"{from_filename}\t{to_filename}")
-        shutil.copy(from_filename, to_filename)
-#         pass
+# # 이중으로 [폴더]-[폴더이름].jpg 이런식으로 있는 구조일 경우
+# files_root = "J:/git/DeepGuider/bin/data/YorkUrbanDB"
+# file_list = os.listdir(files_root)
+# dst_root = 'J:/git/DeepGuider/bin/data/YUD'
+# for f in file_list:
+#     if '.' not in f:
+#         filename = f"{f}.jpg"
+#         from_filename = f"{files_root}/{f}/{filename}"
+#         to_filename = f"{dst_root}/{filename}"
+#         print(f"{from_filename}\t{to_filename}")
+#         shutil.copy(from_filename, to_filename)
+# #         pass
 
 # for su3 case
-dir_root = "J:/git/DeepGuider/bin/data/su3"
+dir_root = "C:/git/DeepGuider/bin/data/su3"
 dir_list = os.listdir(dir_root)
-dst_root = 'J:/git/DeepGuider/bin/data/su3_images'
-for d in dir_list:
+dst_root = 'C:/git/DeepGuider/bin/data/su3_images'
+for d in dir_list: # TODO : tqdm
     file_root = f"{dir_root}/{d}"
     file_list = os.listdir(file_root)
     for f in file_list:
