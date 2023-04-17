@@ -49,6 +49,21 @@ class vp_metric():
         degree = np.arccos(dot_gt_vp)*180/np.pi # neurvps 에서는 err로 되어있는 변수
         return degree
 
+    def AA(self, x, y, threshold):
+        """
+        x : degree 전체를 모아 놓은 것
+        y :   y = (1 + np.arange(len(err))) / len(loader) / n
+            n : vpts 수  => 소실점의 수(데이터 수랑 같을 것 같은데?)
+            len(loader) => 데이터(이미지)의 수
+        """
+        # x = np.sort(x)[::-1]
+        x = np.sort(x)
+
+        index = np.searchsorted(x, threshold)
+        x = np.concatenate([x[:index], [threshold]])
+        y = np.concatenate([y[:index], [threshold]])
+        return ((x[1:] - x[:-1]) * y[:-1]).sum() / threshold
+
     def AA_graph(self, x_list, y, threshold=200):
         # aa_list = []
         # th_list = []
@@ -60,6 +75,7 @@ class vp_metric():
             
             for th in range(0,threshold*10,1):
                 th = th/100
+                
                 # print(f"threshold {th}")
                 for idx, e in enumerate(err):
                     if e<th: # err 를 정렬하였기 때문에, 
@@ -69,14 +85,14 @@ class vp_metric():
                         aa_list.append(aa)
                         # print(f"aa accuracy : {idx} {aa}")
                         break
-                
-                # aa = (len(err)-idx+1)/len(err)
-                # th_list.append(th)
-                # aa_list.append(aa)
-                # print(f"aa accuracy : {idx} {aa}")
-                # print(f"err {}")
+                if th in [1,2,10]:
+                # if th in [0.1,0.2,1]:
+                    print(f"{th} in threshold list")
+                    y_AA = (1 + np.arange(len(err))) / len(err)/ len(err)#/ (0.2*len(err))#/ (0.2*len(err))# / len(err)
+                    AA_value = self.AA(err, y_AA, th)
+                    print(f"{th}\t{AA_value}")
             plt.plot(th_list, aa_list, label=f"result_{i}")
-        print(f"err {err[:10]}")
+        # print(f"err {err[:10]}")
 
         plt.legend()
         plt.show()
@@ -151,8 +167,8 @@ if __name__=="__main__":
     gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_ava"
     result_paths = [
                     "/Users/johnlee/git/daily_coding/vp_data/result_ava", 
-                   "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
-                   "/Users/johnlee/git/daily_coding/vp_data/result_ava_vy_false"
+                #    "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
+                #    "/Users/johnlee/git/daily_coding/vp_data/result_ava_vy_false"
                    ]
     VP = vp_metric(gt_path, result_paths)
     VP.getting_x_y()
