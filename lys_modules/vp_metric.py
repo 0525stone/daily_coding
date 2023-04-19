@@ -92,10 +92,20 @@ class vp_metric():
                     AA_value = self.AA(err, y_AA, th)
                     print(f"{th}\t{AA_value}")
             plt.plot(th_list, aa_list, label=f"result_{i}")
+            value_aa = self.AA_area(th_list, aa_list, 0.1)
+            print(f"0.1 area of AA : {value_aa}")
         # print(f"err {err[:10]}")
 
         plt.legend()
         plt.show()
+
+    def AA_area(self, th_list, aa_list, th):
+        area = 0
+        for t,a in zip(th_list, aa_list):
+            if t<=th:
+                area+=a
+        return area/th
+
 
     def getting_x_y(self):
         x_list = []
@@ -164,9 +174,9 @@ class vp_metric():
         
 
 if __name__=="__main__":
-    gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_ava"
+    gt_path = "D:\git\data_txt/vp-labels/AVA_landscape"
     result_paths = [
-                    "/Users/johnlee/git/daily_coding/vp_data/result_ava", 
+                    "D:\git\data_txt/result_ava", 
                 #    "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
                 #    "/Users/johnlee/git/daily_coding/vp_data/result_ava_vy_false"
                    ]
