@@ -14,7 +14,7 @@ class vp_metric():
         self.f = 10
         self.gt_path = gt_path
         self.result_paths = result_paths
-        self.AA_upper_th = 200
+        self.AA_upper_th = 2000
     
     def vectorize(self, point_x, point_y, w):
         cx = w[0]/2
@@ -58,11 +58,12 @@ class vp_metric():
             len(loader) => validation 데이터(이미지)의 수(데이터 전체에 대해 10%~20%)
         """
         x = np.sort(x)
+        print(f"{x[:10]}")
 
         index = np.searchsorted(x, threshold) # searchsorted : x[i-1] < threshold <= x[i] 조건을 만족하는 i를 구하는 함수
         x = np.concatenate([x[:index], [threshold]])
         y = np.concatenate([y[:index], [threshold]])
-        return ((x[1:] - x[:-1]) * y[:-1]).sum() / threshold
+        return ((x[1:] - x[:-1]) * y[:-1]).sum() / threshold*100
 
     def AA_graph(self, x_list, y):
         # aa_list = []
@@ -74,7 +75,7 @@ class vp_metric():
             th_list = []
             
             for th in range(0,self.AA_upper_th*10,1):
-                th = th/100
+                th = th/1000
                 
                 # print(f"threshold {th}")
                 for idx, e in enumerate(err):
@@ -92,8 +93,15 @@ class vp_metric():
                     AA_value = self.AA(err, y_AA, th)
                     print(f"{th}\t{AA_value}")
             plt.plot(th_list, aa_list, label=f"result_{i}")
-            value_aa = self.AA_area(th_list, aa_list, 0.1)
-            print(f"0.1 area of AA : {value_aa}")
+            # value_aa = self.AA_area(th_list, aa_list, 0.1)
+            # print(f"0.1 area of AA : {value_aa}")
+            # value_aa = self.AA_area(th_list, aa_list, 0.2)
+            # print(f"0.2 area of AA : {value_aa}")
+            # value_aa = self.AA_area(th_list, aa_list, 0.5)
+            # print(f"0.5 area of AA : {value_aa}")
+            # value_aa = self.AA_area(th_list, aa_list, 1)
+            # print(f"1 area of AA : {value_aa}")
+            print(f"AA eq : {self.AA(th_list, aa_list, 1)}")
         # print(f"err {err[:10]}")
 
         plt.legend()
@@ -104,7 +112,7 @@ class vp_metric():
         for t,a in zip(th_list, aa_list):
             if t<=th:
                 area+=a
-        return area/th
+        return area/len(th_list)*100
 
 
     def getting_x_y(self):
@@ -174,16 +182,11 @@ class vp_metric():
         
 
 if __name__=="__main__":
-    gt_path = "D:\git\data_txt/vp-labels/AVA_landscape"
+    gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_ava" # "D:\git\data_txt/vp-labels/gt_ava"
     result_paths = [
-<<<<<<< Updated upstream
-                    "D:\git\data_txt/result_ava", 
-                #    "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
-=======
-                    # "/Users/johnlee/git/daily_coding/vp_data/result_ava", 
+                    "/Users/johnlee/git/daily_coding/vp_data/result_ava", 
                    "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
->>>>>>> Stashed changes
-                #    "/Users/johnlee/git/daily_coding/vp_data/result_ava_vy_false"
+                   "/Users/johnlee/git/daily_coding/vp_data/result_ava_vy_false"
                    ]
     VP = vp_metric(gt_path, result_paths)
     VP.getting_x_y()
