@@ -101,7 +101,7 @@ class vp_metric():
             # print(f"0.5 area of AA : {value_aa}")
             # value_aa = self.AA_area(th_list, aa_list, 1)
             # print(f"1 area of AA : {value_aa}")
-            print(f"AA eq : {self.AA(th_list, aa_list, 1)}")
+            print(f"AA eq : {self.AA(th_list, aa_list, 10)}")
         # print(f"err {err[:10]}")
 
         plt.legend()
@@ -182,21 +182,21 @@ class vp_metric():
         
 
 if __name__=="__main__":
-    gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_ava" # "D:\git\data_txt/vp-labels/gt_ava"
-    result_paths = [
-                    "/Users/johnlee/git/daily_coding/vp_data/result_ava", 
-                   "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
-                   "/Users/johnlee/git/daily_coding/vp_data/result_ava_vy_false"
-                   ]
-    VP = vp_metric(gt_path, result_paths)
-    VP.getting_x_y()
-
-    # gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_flickr"
+    # gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_ava" # "D:\git\data_txt/vp-labels/gt_ava"
     # result_paths = [
-    #                 # "/Users/johnlee/git/daily_coding/vp_data/result_flickr", 
-    #                "/Users/johnlee/git/daily_coding/vp_data/result_flickr_geo_false_vy_false",
-    #             #    "/Users/johnlee/git/daily_coding/vp_data/result_flickr_vy_false"
+    #                 "/Users/johnlee/git/daily_coding/vp_data/result_ava", 
+    #                "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
+    #                "/Users/johnlee/git/daily_coding/vp_data/result_ava_vy_false"
     #                ]
     # VP = vp_metric(gt_path, result_paths)
     # VP.getting_x_y()
+
+    gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_flickr" # "D:\git\data_txt/vp-labels/gt_ava"
+    result_paths = [
+                    "/Users/johnlee/git/daily_coding/vp_data/result_flickr", 
+                   "/Users/johnlee/git/daily_coding/vp_data/result_flickr_geo_false_vy_false",
+                   "/Users/johnlee/git/daily_coding/vp_data/result_filckr_vy_false"
+    ]
+    VP = vp_metric(gt_path, result_paths)
+    VP.getting_x_y()
     
