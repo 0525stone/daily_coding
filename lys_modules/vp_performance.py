@@ -45,9 +45,6 @@ def AA_graph(err, y, threshold=200):
         # print(f"err {}")
     plt.plot(th_list, aa_list, label="Conic")
     print(f"err {err[:10]}")
-        
-
-
 
     # plt.plot(err, y, label="Conic")
     # print(f"x,y length : {len(err)}\t{len(y)}")
@@ -167,23 +164,30 @@ def vp_performance(gt_path, result_path, gt_prefix="", result_prefix=""):
 
 def main():
     print("VP performance code")
-    drive_name = 'C'
-    dataset_gt_dir = {'ava' : f'{drive_name}:\git\DeepGuider\\bin\data\\tmm17\\vp-labels\AVA_landscape', 'flickr' : f'{drive_name}:\git\DeepGuider\\bin\data\\tmm17\\flickr', 'su3' : '../DeepGuider/bin/su3_'}
-    dataset_pred_dir = {'ava' : f'{drive_name}:\git\DeepGuider\\bin\\result_ava', 'flickr' : f'{drive_name}:\git\DeepGuider\\bin\\result_flickr_vy_false', 'su3' : '../DeepGuider/bin/result_su3_101'}
-    dataset = "ava"
-    dataset = "flickr"
+    # drive_name = 'C'
+    # dataset_gt_dir = {'ava' : f'{drive_name}:\git\DeepGuider\\bin\data\\tmm17\\vp-labels\AVA_landscape', 'flickr' : f'{drive_name}:\git\DeepGuider\\bin\data\\tmm17\\flickr', 'su3' : '../DeepGuider/bin/su3_'}
+    # dataset_pred_dir = {'ava' : f'{drive_name}:\git\DeepGuider\\bin\\result_ava', 'flickr' : f'{drive_name}:\git\DeepGuider\\bin\\result_flickr_vy_false', 'su3' : '../DeepGuider/bin/result_su3_101'}
+    # dataset = "ava"
+    # dataset = "flickr"
 
-    gt_path="data/gt"
-    result_path="data/result"
-    gt_path = dataset_gt_dir[dataset]
-    result_path = dataset_pred_dir[dataset]
-    print(f"{os.listdir('data')}\n{os.listdir('.')}")
+    # gt_path="data/gt"
+    # result_path="data/result"
+    # gt_path = dataset_gt_dir[dataset]
+    # result_path = dataset_pred_dir[dataset]
+    # print(f"{os.listdir('data')}\n{os.listdir('.')}")
 
+    gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_ava"
+    result_path = ["/Users/johnlee/git/daily_coding/vp_data/result_ava", 
+                   "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
+                   "/Users/johnlee/git/daily_coding/vp_data/result_ava_vy_false"]
+
+
+    print(result_path[0])
     gt_files = os.listdir(gt_path)
-    result_files = os.listdir(result_path)
+    result_files = os.listdir(result_path[0])
 
-    print(f"{gt_files[:11]}\n{result_files[:11]}\n{gt_path}\n{result_path}")
-    vp_performance(gt_path, result_path,result_prefix="flickr_")
+    # print(f"{gt_files[:11]}\n{result_files[:11]}\n{gt_path}\n{result_path}")
+    vp_performance(gt_path, result_path[0],result_prefix="flickr_")
 
 
 if __name__=="__main__":

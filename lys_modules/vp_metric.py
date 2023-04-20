@@ -14,6 +14,7 @@ class vp_metric():
         self.f = 10
         self.gt_path = gt_path
         self.result_paths = result_paths
+        self.AA_upper_th = 200
     
     def vectorize(self, point_x, point_y, w):
         cx = w[0]/2
@@ -51,20 +52,19 @@ class vp_metric():
 
     def AA(self, x, y, threshold):
         """
-        x : degree 전체를 모아 놓은 것
+        x : degree 전체를 모아 놓은 것(오름차순) => degree는 gt_vector, pred_vector 사이각
         y :   y = (1 + np.arange(len(err))) / len(loader) / n
             n : vpts 수  => 소실점의 수(데이터 수랑 같을 것 같은데?)
-            len(loader) => 데이터(이미지)의 수
+            len(loader) => validation 데이터(이미지)의 수(데이터 전체에 대해 10%~20%)
         """
-        # x = np.sort(x)[::-1]
         x = np.sort(x)
 
-        index = np.searchsorted(x, threshold)
+        index = np.searchsorted(x, threshold) # searchsorted : x[i-1] < threshold <= x[i] 조건을 만족하는 i를 구하는 함수
         x = np.concatenate([x[:index], [threshold]])
         y = np.concatenate([y[:index], [threshold]])
         return ((x[1:] - x[:-1]) * y[:-1]).sum() / threshold
 
-    def AA_graph(self, x_list, y, threshold=200):
+    def AA_graph(self, x_list, y):
         # aa_list = []
         # th_list = []
         assert len(x_list)==len(self.result_paths), "different size"
@@ -73,7 +73,7 @@ class vp_metric():
             aa_list = []
             th_list = []
             
-            for th in range(0,threshold*10,1):
+            for th in range(0,self.AA_upper_th*10,1):
                 th = th/100
                 
                 # print(f"threshold {th}")
@@ -88,7 +88,7 @@ class vp_metric():
                 if th in [1,2,10]:
                 # if th in [0.1,0.2,1]:
                     print(f"{th} in threshold list")
-                    y_AA = (1 + np.arange(len(err))) / len(err)/ len(err)#/ (0.2*len(err))#/ (0.2*len(err))# / len(err)
+                    y_AA = (1 + np.arange(len(err))) / (0.2*len(err))/ len(err)# / len(err)/ len(err)
                     AA_value = self.AA(err, y_AA, th)
                     print(f"{th}\t{AA_value}")
             plt.plot(th_list, aa_list, label=f"result_{i}")
@@ -176,10 +176,24 @@ class vp_metric():
 if __name__=="__main__":
     gt_path = "D:\git\data_txt/vp-labels/AVA_landscape"
     result_paths = [
+<<<<<<< Updated upstream
                     "D:\git\data_txt/result_ava", 
                 #    "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
+=======
+                    # "/Users/johnlee/git/daily_coding/vp_data/result_ava", 
+                   "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
+>>>>>>> Stashed changes
                 #    "/Users/johnlee/git/daily_coding/vp_data/result_ava_vy_false"
                    ]
     VP = vp_metric(gt_path, result_paths)
     VP.getting_x_y()
+
+    # gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_flickr"
+    # result_paths = [
+    #                 # "/Users/johnlee/git/daily_coding/vp_data/result_flickr", 
+    #                "/Users/johnlee/git/daily_coding/vp_data/result_flickr_geo_false_vy_false",
+    #             #    "/Users/johnlee/git/daily_coding/vp_data/result_flickr_vy_false"
+    #                ]
+    # VP = vp_metric(gt_path, result_paths)
+    # VP.getting_x_y()
     
