@@ -88,18 +88,11 @@ class vp_metric():
                 if th in [1,2,10]:
                 # if th in [0.1,0.2,1]:
                     print(f"{th} in threshold list")
-                    y_AA = (1 + np.arange(len(err))) / (0.2*len(err))/ len(err)# / len(err)/ len(err)
+                    y_AA = (1 + np.arange(len(err))) / (len(err))/ len(err)# / len(err)/ len(err)
                     AA_value = self.AA(err, y_AA, th)
                     print(f"{th}\t{AA_value}")
             plt.plot(th_list, aa_list, label=f"result_{i}")
-            # value_aa = self.AA_area(th_list, aa_list, 0.1)
-            # print(f"0.1 area of AA : {value_aa}")
-            # value_aa = self.AA_area(th_list, aa_list, 0.2)
-            # print(f"0.2 area of AA : {value_aa}")
-            # value_aa = self.AA_area(th_list, aa_list, 0.5)
-            # print(f"0.5 area of AA : {value_aa}")
-            # value_aa = self.AA_area(th_list, aa_list, 1)
-            # print(f"1 area of AA : {value_aa}")
+
             print(f"AA@1 eq : {self.AA(th_list, aa_list, 1)}")
             print(f"AA@2 eq : {self.AA(th_list, aa_list, 2)}")
             print(f"AA@10 eq : {self.AA(th_list, aa_list, 10)}")
@@ -183,21 +176,23 @@ class vp_metric():
         
 
 if __name__=="__main__":
-    gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_ava" # "D:\git\data_txt/vp-labels/gt_ava"
-    result_paths = [
-                    "/Users/johnlee/git/daily_coding/vp_data/result_ava", 
-                   "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
-                   "/Users/johnlee/git/daily_coding/vp_data/result_ava_vy_false"
-                   ]
-    VP = vp_metric(gt_path, result_paths)
-    VP.getting_x_y()
+    relative_path = "J:\git\data_txt" # "/Users/johnlee/git/daily_coding/vp_data" 
 
-    # gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_flickr" # "D:\git\data_txt/vp-labels/gt_ava"
+    # gt_path = f"{relative_path}/vp-labels/gt_ava" # "D:\git\data_txt/vp-labels/gt_ava"
     # result_paths = [
-    #                 "/Users/johnlee/git/daily_coding/vp_data/result_flickr", 
-    #                "/Users/johnlee/git/daily_coding/vp_data/result_flickr_geo_false_vy_false",
-    #                "/Users/johnlee/git/daily_coding/vp_data/result_filckr_vy_false"
-    # ]
+    #                 f"{relative_path}/result_ava", 
+    #             #    f"{relative_path}/result_ava_geo_false_vy_false",
+    #                f"{relative_path}/result_ava_vy_false"
+    #                ]
     # VP = vp_metric(gt_path, result_paths)
     # VP.getting_x_y()
+
+    gt_path = f"{relative_path}/vp-labels/gt_flickr" # "D:\git\data_txt/vp-labels/gt_ava"
+    result_paths = [
+                    f"{relative_path}/result_flickr", 
+                #    f"{relative_path}/result_flickr_geo_false_vy_false",
+                   f"{relative_path}/result_filckr_vy_false"
+    ]
+    VP = vp_metric(gt_path, result_paths)
+    VP.getting_x_y()
     
