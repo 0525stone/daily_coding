@@ -108,7 +108,6 @@ class vp_metric():
                 area+=a
         return area/len(th_list)*100
 
-
     def getting_x_y(self):
         x_list = []
         gt_files = os.listdir(self.gt_path)
