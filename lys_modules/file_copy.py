@@ -22,18 +22,34 @@ root - 000 - file.file
 #         shutil.copy(from_filename, to_filename)
 # #         pass
 
-# for su3 case
-dir_root = "C:/git/DeepGuider/bin/data/su3"
-dir_list = os.listdir(dir_root)
-dst_root = 'C:/git/DeepGuider/bin/data/su3_images'
-for d in dir_list: # TODO : tqdm
-    file_root = f"{dir_root}/{d}"
-    file_list = os.listdir(file_root)
-    for f in file_list:
-        if '.png' in f:
-            filename = f"{f}.jpg"
+# # for su3 case
+# dir_root = "C:/git/DeepGuider/bin/data/su3"
+# dir_list = os.listdir(dir_root)
+# dst_root = 'C:/git/DeepGuider/bin/data/su3_images'
+# for d in dir_list: # TODO : tqdm
+#     file_root = f"{dir_root}/{d}"
+#     file_list = os.listdir(file_root)
+#     for f in file_list:
+#         if '.png' in f:
+#             filename = f"{f}.jpg"
             
-            from_filename = f"{file_root}/{f}"
-            to_filename = f"{dst_root}/{d}_{f}"
-#             print(f"{from_filename}\n{to_filename}\n\n")
-            shutil.copy(from_filename, to_filename)
+#             from_filename = f"{file_root}/{f}"
+#             to_filename = f"{dst_root}/{d}_{f}"
+# #             print(f"{from_filename}\n{to_filename}\n\n")
+#             shutil.copy(from_filename, to_filename)
+
+# # validation dataset 만드는 코드
+# # file list가 있는 txt 읽어서 파일들 옮겨주는 코드
+root_dir = "J:/git/DeepGuider/bin/data/tmm17"
+dst_dir = "J:/git/DeepGuider/bin/data/validation"
+txt_filename = f"{root_dir}/valid.txt"
+with open(txt_filename, 'r') as f:
+    lines = f.readlines()
+print(len(lines))
+for idx, filename in enumerate(lines):
+    # if idx<10:
+    filename = filename.strip()
+    from_filename = os.path.join(root_dir,filename)
+    to_filename = os.path.join(dst_dir,filename)
+    print(f"{idx}\t{from_filename}\t{to_filename}")
+    shutil.copy(from_filename, to_filename)
