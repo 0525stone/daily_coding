@@ -14,3 +14,4 @@ twim/*.ipynb
 *.txt
 data/*
 data/gt/*
+vp_data/*
