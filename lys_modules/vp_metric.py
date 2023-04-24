@@ -76,36 +76,18 @@ class vp_metric():
             
             for th in range(0,self.AA_upper_th*10,1):
                 th = th/1000
-                
-                # print(f"threshold {th}")
                 for idx, e in enumerate(err):
                     if e<th: # err 를 정렬하였기 때문에, 
-                        # print(f"check\t{idx}\t{e} {th} {err[idx]}")
                         aa = (len(err)-idx+1)/len(err)
                         th_list.append(th)
                         aa_list.append(aa)
-                        # print(f"aa accuracy : {idx} {aa}")
                         break
-                if th in [1,2,10]:
-                # if th in [0.1,0.2,1]:
-                    # print(f"{th} in threshold list")
-                    y_AA = (1 + np.arange(len(err))) / (0.2*len(err))/ len(err)# / len(err)/ len(err)
-                    AA_value = self.AA(err, y_AA, th)
-                    # print(f"{th}\t{AA_value}")
             plt.plot(th_list, aa_list, label=f"result_{i}")
             print(f"AA@1 eq : {self.AA(th_list, aa_list, 1)}")
             print(f"AA@2 eq : {self.AA(th_list, aa_list, 2)}")
             print(f"AA@10 eq : {self.AA(th_list, aa_list, 10)}")
         plt.legend()
         plt.show()
-
-    def AA_area(self, th_list, aa_list, th):
-        area = 0
-        for t,a in zip(th_list, aa_list):
-            if t<=th:
-                area+=a
-        return area/len(th_list)*100
-
 
     def result_summary(self):
         gt_files = os.listdir(self.gt_path)
@@ -168,23 +150,26 @@ class vp_metric():
         
 
 if __name__=="__main__":
-    # gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_ava" # "D:\git\data_txt/vp-labels/gt_ava"
-    # result_paths = [
-    #                 "/Users/johnlee/git/daily_coding/vp_data/result_ava", 
-    #                "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
-    #                "/Users/johnlee/git/daily_coding/vp_data/result_ava_vy_false",
-    #                "/Users/johnlee/git/daily_coding/vp_data/result_ava_val_f_vy_false"
-    #                ]
-    # VP = vp_metric(gt_path, result_paths)
-    # VP.getting_x_y()
+    dataset_name = "ava"
+    dataset_name = "flickr"
+    dataset_name = "su3"
 
-    gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_flickr" # "D:\git\data_txt/vp-labels/gt_ava"
-    result_paths = [
-                    "/Users/johnlee/git/daily_coding/vp_data/result_flickr", 
-                   "/Users/johnlee/git/daily_coding/vp_data/result_flickr_geo_false_vy_false",
-                   "/Users/johnlee/git/daily_coding/vp_data/result_filckr_vy_false",
-                     "/Users/johnlee/git/daily_coding/vp_data/result_flickr_val_f_vy_false"
-    ]
+    if dataset_name=="ava":
+        gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_ava" # "D:\git\data_txt/vp-labels/gt_ava"
+        result_paths = [
+                        "/Users/johnlee/git/daily_coding/vp_data/result_ava", 
+                    "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
+                    "/Users/johnlee/git/daily_coding/vp_data/result_ava_vy_false",
+                    "/Users/johnlee/git/daily_coding/vp_data/result_ava_val_f_vy_false"
+                    ]
+    elif dataset_name=="flickr":
+        gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_flickr" # "D:\git\data_txt/vp-labels/gt_ava"
+        result_paths = [
+                "/Users/johnlee/git/daily_coding/vp_data/result_flickr", 
+                "/Users/johnlee/git/daily_coding/vp_data/result_flickr_geo_false_vy_false",
+                "/Users/johnlee/git/daily_coding/vp_data/result_filckr_vy_false",
+                    "/Users/johnlee/git/daily_coding/vp_data/result_flickr_val_f_vy_false"
+        ]
     VP = vp_metric(gt_path, result_paths)
     VP.result_summary()
     
