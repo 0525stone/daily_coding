@@ -1,6 +1,7 @@
 """
 vp_performance 를 정리, 클래스화
 
+roadtheta 전용 utils 를 만들어서 txt 읽어들이고 점수 계산하는 코드들을 utils에 주면 좋을 듯
 """
 import os
 import cv2
@@ -15,6 +16,9 @@ class vp_metric():
         self.gt_path = gt_path
         self.result_paths = result_paths
         self.AA_upper_th = 2000
+
+        # AA 구하기 위해
+        self.err_list = []
     
     def vectorize(self, point_x, point_y, w):
         cx = w[0]/2
@@ -64,12 +68,9 @@ class vp_metric():
         y = np.concatenate([y[:index], [threshold]])
         return ((x[1:] - x[:-1]) * y[:-1]).sum() / threshold*100
 
-    def AA_graph(self, x_list, y):
-        # aa_list = []
-        # th_list = []
-        assert len(x_list)==len(self.result_paths), "different size"
-        print(f"why?\t\t{len(x_list)}")
-        for i, err in enumerate(x_list):
+    def AA_graph(self, err_list, y):
+        assert len(err_list)==len(self.result_paths), "different size"
+        for i, err in enumerate(err_list):
             aa_list = []
             th_list = []
             
@@ -87,17 +88,14 @@ class vp_metric():
                         break
                 if th in [1,2,10]:
                 # if th in [0.1,0.2,1]:
-                    print(f"{th} in threshold list")
-                    y_AA = (1 + np.arange(len(err))) / (len(err))/ len(err)# / len(err)/ len(err)
+                    # print(f"{th} in threshold list")
+                    y_AA = (1 + np.arange(len(err))) / (0.2*len(err))/ len(err)# / len(err)/ len(err)
                     AA_value = self.AA(err, y_AA, th)
-                    print(f"{th}\t{AA_value}")
+                    # print(f"{th}\t{AA_value}")
             plt.plot(th_list, aa_list, label=f"result_{i}")
-
             print(f"AA@1 eq : {self.AA(th_list, aa_list, 1)}")
             print(f"AA@2 eq : {self.AA(th_list, aa_list, 2)}")
             print(f"AA@10 eq : {self.AA(th_list, aa_list, 10)}")
-        # print(f"err {err[:10]}")
-
         plt.legend()
         plt.show()
 
@@ -108,12 +106,12 @@ class vp_metric():
                 area+=a
         return area/len(th_list)*100
 
-    def getting_x_y(self):
-        x_list = []
+
+    def result_summary(self):
         gt_files = os.listdir(self.gt_path)
         gt_files = sorted([f for f in gt_files if f.endswith(".txt")])
         for result_path in self.result_paths:
-            
+            print(f"{result_path}")
             result_files = os.listdir(result_path)
             
             result_files = sorted([f for f in result_files if f.endswith(".txt")])
@@ -154,13 +152,9 @@ class vp_metric():
                             aa_degree = self.get_degree(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w)
                             err.append(aa_degree)
                             if aa_degree<aa_threshold:
-                                # print(f'aa degree : {aa_degree}')
-                                # print(f"good case {aa_degree}", gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y)
                                 good += 1
                             else:
-                                # print(f"bad case {aa_degree}", gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y)
                                 bad += 1
-                            # f_save.write(f"{gt_filename},{gt_vp_x},{gt_vp_y},{pred_vp_x},{pred_vp_y},{aa_degree}\n")
                             score.append(aa_degree)
                             
                         else:   # 혹시 모를 상황
@@ -168,30 +162,29 @@ class vp_metric():
                             # continue # TODO : continue를 하더라도 어떤 것을 패스했는지는 알아야하니 변수하나에 담아야함
             # f_save.close()
             err = -np.sort(-np.array(err))
-            x_list.append(err)
+            self.err_list.append(err)
         y = (1 + np.arange(len(err))) / total# / total # len(loader) / n => 각각 을 len(loader), n 으로 
-        print(f"{len(x_list)}")
-        self.AA_graph(x_list, y)
+        self.AA_graph(self.err_list, y)
         
 
 if __name__=="__main__":
-    relative_path = "J:\git\data_txt" # "/Users/johnlee/git/daily_coding/vp_data" 
-
-    # gt_path = f"{relative_path}/vp-labels/gt_ava" # "D:\git\data_txt/vp-labels/gt_ava"
+    # gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_ava" # "D:\git\data_txt/vp-labels/gt_ava"
     # result_paths = [
-    #                 f"{relative_path}/result_ava", 
-    #             #    f"{relative_path}/result_ava_geo_false_vy_false",
-    #                f"{relative_path}/result_ava_vy_false"
+    #                 "/Users/johnlee/git/daily_coding/vp_data/result_ava", 
+    #                "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
+    #                "/Users/johnlee/git/daily_coding/vp_data/result_ava_vy_false",
+    #                "/Users/johnlee/git/daily_coding/vp_data/result_ava_val_f_vy_false"
     #                ]
     # VP = vp_metric(gt_path, result_paths)
     # VP.getting_x_y()
 
-    gt_path = f"{relative_path}/vp-labels/gt_flickr" # "D:\git\data_txt/vp-labels/gt_ava"
+    gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_flickr" # "D:\git\data_txt/vp-labels/gt_ava"
     result_paths = [
-                    f"{relative_path}/result_flickr", 
-                #    f"{relative_path}/result_flickr_geo_false_vy_false",
-                   f"{relative_path}/result_filckr_vy_false"
+                    "/Users/johnlee/git/daily_coding/vp_data/result_flickr", 
+                   "/Users/johnlee/git/daily_coding/vp_data/result_flickr_geo_false_vy_false",
+                   "/Users/johnlee/git/daily_coding/vp_data/result_filckr_vy_false",
+                     "/Users/johnlee/git/daily_coding/vp_data/result_flickr_val_f_vy_false"
     ]
     VP = vp_metric(gt_path, result_paths)
-    VP.getting_x_y()
+    VP.result_summary()
     
