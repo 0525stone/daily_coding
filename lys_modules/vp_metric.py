@@ -83,6 +83,7 @@ class vp_metric():
                         aa_list.append(aa)
                         break
             plt.plot(th_list, aa_list, label=f"result_{i}")
+            print(f"{result_paths[i]}")
             print(f"AA@1 eq : {self.AA(th_list, aa_list, 1)}")
             print(f"AA@2 eq : {self.AA(th_list, aa_list, 2)}")
             print(f"AA@10 eq : {self.AA(th_list, aa_list, 10)}")
@@ -93,7 +94,6 @@ class vp_metric():
         gt_files = os.listdir(self.gt_path)
         gt_files = sorted([f for f in gt_files if f.endswith(".txt")])
         for result_path in self.result_paths:
-            print(f"{result_path}")
             result_files = os.listdir(result_path)
             
             result_files = sorted([f for f in result_files if f.endswith(".txt")])
@@ -152,7 +152,7 @@ class vp_metric():
 if __name__=="__main__":
     dataset_name = "ava"
     dataset_name = "flickr"
-    dataset_name = "su3"
+    # dataset_name = "su3" 
 
     if dataset_name=="ava":
         gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_ava" # "D:\git\data_txt/vp-labels/gt_ava"
