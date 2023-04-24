@@ -1,5 +1,6 @@
 import os
 import shutil
+from tqdm import tqdm
 
 """
 트리구조 디렉토리에서 파일을 복사에서 옮기는 코드
@@ -40,16 +41,32 @@ root - 000 - file.file
 
 # # validation dataset 만드는 코드
 # # file list가 있는 txt 읽어서 파일들 옮겨주는 코드
-root_dir = "J:/git/DeepGuider/bin/data/tmm17"
-dst_dir = "J:/git/DeepGuider/bin/data/validation"
-txt_filename = f"{root_dir}/valid.txt"
-with open(txt_filename, 'r') as f:
-    lines = f.readlines()
-print(len(lines))
-for idx, filename in enumerate(lines):
-    # if idx<10:
-    filename = filename.strip()
-    from_filename = os.path.join(root_dir,filename)
-    to_filename = os.path.join(dst_dir,filename)
-    print(f"{idx}\t{from_filename}\t{to_filename}")
-    shutil.copy(from_filename, to_filename)
+# root_dir = "J:/git/DeepGuider/bin/data/tmm17"
+# dst_dir = "J:/git/DeepGuider/bin/data/validation"
+# txt_filename = f"{root_dir}/valid.txt"
+# with open(txt_filename, 'r') as f:
+#     lines = f.readlines()
+# print(len(lines))
+# for idx, filename in enumerate(lines):
+#     # if idx<10:
+#     filename = filename.strip()
+#     from_filename = os.path.join(root_dir,filename)
+#     to_filename = os.path.join(dst_dir,filename)
+#     print(f"{idx}\t{from_filename}\t{to_filename}")
+#     shutil.copy(from_filename, to_filename)
+
+root_dir = "/Volumes/새 볼륨/git/DeepGuider/bin/data/su3"
+dst_dir = "/Volumes/새 볼륨/git/DeepGuider/bin/data/gt_su3"
+
+su3_dirs = os.listdir(root_dir)
+
+print(f"{len(su3_dirs)}")
+for idx, su3_dir in enumerate(tqdm(su3_dirs)):
+    # if idx<5:
+    su3_files = os.listdir(os.path.join(root_dir,su3_dir))
+    su3_files = [f for f in su3_files if ".npz" in f]
+    # print(f"files : {len(su3_files)}")
+    for su3_file in su3_files:
+        from_filename = os.path.join(root_dir, su3_dir, su3_file)
+        to_filename = os.path.join(dst_dir, f"{su3_dir}_{su3_file}")
+        shutil.copy(from_filename, to_filename)

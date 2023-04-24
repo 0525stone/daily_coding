@@ -1,5 +1,5 @@
 import numpy as np
-
+from vp_utils import vectorize, find_vp, get_degree, AA
 
 class su3_file():
     def __init__(self, filename):
@@ -14,7 +14,6 @@ class su3_file():
         y = -vpts[:,1] / vpts[:, 2] * focal_length * max(h, w)/2.0 + h//2
         return y, x
     
-
 def main():
     npz_filename = "data/0000_0_label.npz"
     s = su3_file(npz_filename)
