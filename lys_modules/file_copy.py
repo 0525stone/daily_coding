@@ -55,18 +55,43 @@ root - 000 - file.file
 #     print(f"{idx}\t{from_filename}\t{to_filename}")
 #     shutil.copy(from_filename, to_filename)
 
-root_dir = "/Volumes/새 볼륨/git/DeepGuider/bin/data/su3"
-dst_dir = "/Volumes/새 볼륨/git/DeepGuider/bin/data/gt_su3"
+# root_dir = "/Volumes/새 볼륨/git/DeepGuider/bin/data/su3"
+# dst_dir = "/Volumes/새 볼륨/git/DeepGuider/bin/data/gt_su3"
 
-su3_dirs = os.listdir(root_dir)
+# su3_dirs = os.listdir(root_dir)
 
-print(f"{len(su3_dirs)}")
-for idx, su3_dir in enumerate(tqdm(su3_dirs)):
-    # if idx<5:
-    su3_files = os.listdir(os.path.join(root_dir,su3_dir))
-    su3_files = [f for f in su3_files if ".npz" in f]
-    # print(f"files : {len(su3_files)}")
-    for su3_file in su3_files:
-        from_filename = os.path.join(root_dir, su3_dir, su3_file)
-        to_filename = os.path.join(dst_dir, f"{su3_dir}_{su3_file}")
-        shutil.copy(from_filename, to_filename)
+# print(f"{len(su3_dirs)}")
+# for idx, su3_dir in enumerate(tqdm(su3_dirs)):
+#     # if idx<5:
+#     su3_files = os.listdir(os.path.join(root_dir,su3_dir))
+#     su3_files = [f for f in su3_files if ".npz" in f]
+#     # print(f"files : {len(su3_files)}")
+#     for su3_file in su3_files:
+#         from_filename = os.path.join(root_dir, su3_dir, su3_file)
+#         to_filename = os.path.join(dst_dir, f"{su3_dir}_{su3_file}")
+#         shutil.copy(from_filename, to_filename)
+
+def file_copy_txt(txt_filename, root_dir="", dst_dir=""):
+    with open(txt_filename, 'r') as f:
+        filename_list = f.readlines()
+        print(len(filename_list))
+        for filename in filename_list:
+            filename = filename.strip()
+            from_filename = f"{root_dir}/{filename[:-4]}.txt"
+            from_filename=from_filename.replace('ava', "AVA_landscape")
+            from_filename=from_filename.replace('flickr', "Flickr")
+            to_filename = f"{dst_dir}/{filename[:-4]}.txt"
+            print(f"from {from_filename}\nto {to_filename}")
+            shutil.copy(from_filename, to_filename)
+
+
+
+def main():
+    root_dir ="D:/git/DeepGuider/bin/data/tmm17/vp-labels"
+    dst_dir = "D:/git/DeepGuider/bin/gt_valid"
+    txt_filename= "D:/git/DeepGuider/bin/data/tmm17/valid.txt"
+    file_copy_txt(txt_filename, root_dir, dst_dir)
+
+
+if __name__=="__main__":
+    main()
