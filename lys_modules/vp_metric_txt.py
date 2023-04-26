@@ -33,6 +33,7 @@ class vp_metric_txt():
 
         for filename in self.files:
             aa_threshold = 6
+            filename = f"{filename.split('.')[0]}.txt"
 
             # f_save = open('data/result.txt','w')
             # f_save.write(f"filename,gt_x,gt_y,pred_x,pred_y,degree\n")
@@ -40,7 +41,7 @@ class vp_metric_txt():
 
             total+=1
             with open(os.path.join(self.gt_path, filename), 'r') as f_gt:
-                with open(os.path.join(result_path, filename)) as f_result:
+                with open(os.path.join(result_paths, filename), 'r') as f_result:
                     gt_line = f_gt.readlines()
                     if len(gt_line)==3:
                         w = gt_line[0].strip().replace('  ',' ').split(' ')
@@ -70,11 +71,11 @@ class vp_metric_txt():
                         score.append(aa_degree)
                         
                     else:   # 혹시 모를 상황
-                        assert 0, f"need to check gt file name: {gt_filename}"
+                        assert 0, f"need to check gt file name: {filename}"
                         # continue # TODO : continue를 하더라도 어떤 것을 패스했는지는 알아야하니 변수하나에 담아야함
             # f_save.close()
-            err = -np.sort(-np.array(err))
-            self.err_list.append(err)
+        err = -np.sort(-np.array(err))
+        self.err_list.append(err)
         y = (1 + np.arange(len(err))) / total# / total # len(loader) / n => 각각 을 len(loader), n 으로 
         self.AA_graph(self.err_list, y)
         
@@ -128,7 +129,7 @@ class vp_metric_txt():
         return ((x[1:] - x[:-1]) * y[:-1]).sum() / threshold*100
 
     def AA_graph(self, err_list, y):
-        assert len(err_list)==len(self.result_paths), "different size"
+        # assert len(err_list)==len(self.result_paths), f"different size\t{len(err_list)}\t{len(self.result_paths)}"
         for i, err in enumerate(err_list):
             aa_list = []
             th_list = []
@@ -173,9 +174,9 @@ if __name__=="__main__":
                     "/Users/johnlee/git/daily_coding/vp_data/result_flickr_val_f_vy_false"
         ]
 
-    file_txt = "D:/git/DeepGuider/bin/data/tmm17/valid.txt"
-    gt_path = "D:/git/DeepGuider/bin/data/tmm17/"
-    result_path = "D:/git/data_txt/result_valid1/"
+    file_txt = "/Users/johnlee/git/daily_coding/vp_data/valid.txt" # D:/git/DeepGuider/bin/data/tmm17/valid.txt
+    gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_valid"
+    result_paths = "/Users/johnlee/git/daily_coding/vp_data/result_valid3"
     
     VP = vp_metric_txt(file_txt, gt_path, result_paths)
     VP.result_summary()
