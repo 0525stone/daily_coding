@@ -15,6 +15,27 @@ class su3_file():
         y = -vpts[:,1] / vpts[:, 2] * focal_length * max(h, w)/2.0 + h//2
         return y, x
     
+def npz2points(vpts, focal_length=1.0, h=512, w=512): # 기존 h=480, w=640
+    x = vpts[:,0] / vpts[:, 2] * focal_length * max(h, w)/2.0 + w//2
+    y = -vpts[:,1] / vpts[:, 2] * focal_length * max(h, w)/2.0 + h//2
+    return y, x
+
+def get1point(x, y, pred_x, pred_y):
+    """
+    gt 3개와 pred 주면 제일 가까운 점 하나를 찾아줌
+    """
+    min_th = (pred_x-x[0])*(pred_x-x[0]) + ((pred_y-y[0]))*(pred_y-y[0])
+    min_x = x[0]
+    min_y = y[0]
+
+    for temp_x,temp_y in zip(x[1:], y[1:]):
+        temp_th = (pred_x-temp_x)*(pred_x-temp_x) + ((pred_y-temp_y))*(pred_y-temp_y)
+        if temp_th<min_th:
+            min_x = temp_x
+            min_y = temp_y
+            min_th = temp_th
+    return min_x, min_y
+
 def main():
     # npz_filename = "data/0000_0_label.npz"
     # s = su3_file(npz_filename)
@@ -28,14 +49,44 @@ def main():
                       "/Users/johnlee/git/daily_coding/vp_data/result_su3_val_f_vy_false",
                       "/Users/johnlee/git/daily_coding/vp_data/result_su3_vy_false"
                       ]
-    for su3_preds_dir in su3_preds_dirs:
-        pred_files = sorted(os.listdir(su3_preds_dir))
-        print(f"pred files {len(pred_files)}\n{pred_files[:5]}")
+    su3_gt_new_dirs = ["/Users/johnlee/git/daily_coding/vp_data/gt_su3_val_f", 
+                      "/Users/johnlee/git/daily_coding/vp_data/gt_su3_val_f_vy_false",
+                      "/Users/johnlee/git/daily_coding/vp_data/gt_su3_vy_false"
+                      ]
+    for su3_preds_dir, su3_gt_new_dir in zip(su3_preds_dirs, su3_gt_new_dirs):
+        pred_files = sorted(os.listdir(su3_preds_dir)) # TODO : gt_file을 보고 pred_file 이름을 알 수 있음
+        # print(f"pred files {len(pred_files)}\n{pred_files[:5]}")
 
-    for idx, (gt_file, pred_file) in enumerate(zip(gt_files, pred_files)):
-        if idx<5:
+        for idx, (gt_file, pred_file) in enumerate(zip(gt_files, pred_files)):
+            # if idx<5:
             filename = gt_file.split(".")[0][:-6]
             print(f"{filename}\t{pred_file}")
+
+            # gt 3개의 점 읽어옴
+            gt_filename = os.path.join(su3_root,gt_file)
+            gt_content = np.load(gt_filename)
+            vpts = gt_content['vpts']
+            gt_y, gt_x = npz2points(vpts)
+
+            # pred 1개의 점 읽어옴
+            pred_filename = os.path.join(su3_preds_dir, pred_file)
+            with open(pred_filename, 'r') as f:
+                result_line = f.readlines()
+                result_line = result_line[0].strip().split(',')
+                pred_x, pred_y = float(result_line[5]), float(result_line[6])
+            
+            gt_x, gt_y = get1point(gt_x, gt_y, pred_x, pred_y)
+            print(f"points\n{gt_x}\t{gt_y}\n{pred_x}\t{pred_y}")
+            
+            save_filename = os.path.join(su3_gt_new_dir, pred_file)
+            with open(save_filename, 'w') as f_save:
+                f_save.write(f"{gt_x}\t{gt_y}\n")
+
+
+
+
+            # print(vpts)
+
 
 
 if __name__=="__main__":
