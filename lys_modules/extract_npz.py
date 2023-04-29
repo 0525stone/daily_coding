@@ -40,18 +40,19 @@ def main():
     # npz_filename = "data/0000_0_label.npz"
     # s = su3_file(npz_filename)
 
-
-    su3_root = "/Volumes/LYS/git/Deepguider/bin/data/gt_su3"
+    su3_root = "J:/git/DeepGuider/bin/data/gt_su3"
     gt_files = os.listdir(su3_root)
     print(f"files : {len(gt_files)}\n{gt_files[:5]}")
-
-    su3_preds_dirs = ["/Users/johnlee/git/daily_coding/vp_data/result_su3_val_f", 
-                      "/Users/johnlee/git/daily_coding/vp_data/result_su3_val_f_vy_false",
-                      "/Users/johnlee/git/daily_coding/vp_data/result_su3_vy_false"
+# 
+    su3_preds_dirs = [
+                        # "J:/git/data_txt/result_su3_val_f", 
+                      "J:/git/data_txt/result_su3_val_f_vy_false",
+                      "J:/git/data_txt/result_su3_vy_false"
                       ]
-    su3_gt_new_dirs = ["/Users/johnlee/git/daily_coding/vp_data/gt_su3_val_f", 
-                      "/Users/johnlee/git/daily_coding/vp_data/gt_su3_val_f_vy_false",
-                      "/Users/johnlee/git/daily_coding/vp_data/gt_su3_vy_false"
+    su3_gt_new_dirs = [
+                        # "J:/git/data_txt/gt_su3_val_f", 
+                      "J:/git/data_txt/gt_su3_val_f_vy_false",
+                      "J:/git/data_txt/gt_su3_vy_false"
                       ]
     for su3_preds_dir, su3_gt_new_dir in zip(su3_preds_dirs, su3_gt_new_dirs):
         pred_files = sorted(os.listdir(su3_preds_dir)) # TODO : gt_file을 보고 pred_file 이름을 알 수 있음
