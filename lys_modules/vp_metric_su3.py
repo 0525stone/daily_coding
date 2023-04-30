@@ -120,6 +120,7 @@ class vp_metric():
                         gt_line = f_gt.readlines()
 
                         if len(gt_line)==1:
+                            print(os.path.join(gt_path, gt_filename))
                             gt = gt_line[0].strip().split('\t')
                             gt = [float(p) for p in gt]
                             gt_x, gt_y = gt
@@ -160,16 +161,23 @@ class vp_metric():
         
 
 if __name__=="__main__":
+    su3_gt_dirs = [
+                    # "J:/git/data_txt/gt_su3_val_f", 
+                #   "J:/git/data_txt/gt_su3_val_f_vy_false",
+                #   "J:/git/data_txt/gt_su3_vy_false",
+                    # "J:/git/data_txt/gt_exp1",
+                    "J:/git/data_txt/gt_exp2",
+                    "J:/git/data_txt/gt_exp3",
+                    ]
     su3_preds_dirs = [
                         # "J:/git/data_txt/result_su3_val_f", 
                     #   "J:/git/data_txt/result_su3_val_f_vy_false",
-                      "J:/git/data_txt/result_su3_vy_false"
+                    #   "J:/git/data_txt/result_su3_vy_false",
+                    #   "J:/git/data_txt/result_exp1_su3",
+                      "J:/git/data_txt/result_exp2_su3",
+                      "J:/git/data_txt/result_exp3_su3",                      
                       ]
-    su3_gt_dirs = [
-                        # "J:/git/data_txt/gt_su3_val_f", 
-                    #   "J:/git/data_txt/gt_su3_val_f_vy_false",
-                      "J:/git/data_txt/gt_su3_vy_false"
-                      ]
+
     VP = vp_metric(su3_gt_dirs, su3_preds_dirs)
     VP.result_summary()
     

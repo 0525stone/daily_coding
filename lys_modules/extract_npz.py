@@ -27,8 +27,8 @@ def get1point(x, y, pred_x, pred_y):
     min_th = (pred_x-x[0])*(pred_x-x[0]) + ((pred_y-y[0]))*(pred_y-y[0])
     min_x = x[0]
     min_y = y[0]
-
-    for temp_x,temp_y in zip(x[1:], y[1:]):
+    # TODO : 여기가 의심됨
+    for temp_x,temp_y in zip(x, y):
         temp_th = (pred_x-temp_x)*(pred_x-temp_x) + ((pred_y-temp_y))*(pred_y-temp_y)
         if temp_th<min_th:
             min_x = temp_x
@@ -36,24 +36,12 @@ def get1point(x, y, pred_x, pred_y):
             min_th = temp_th
     return min_x, min_y
 
-def main():
-    # npz_filename = "data/0000_0_label.npz"
-    # s = su3_file(npz_filename)
-
+def extract_vp_su3(su3_gt_new_dirs, su3_preds_dirs, su3_root):
     su3_root = "J:/git/DeepGuider/bin/data/gt_su3"
     gt_files = os.listdir(su3_root)
-    print(f"files : {len(gt_files)}\n{gt_files[:5]}")
-# 
-    su3_preds_dirs = [
-                        # "J:/git/data_txt/result_su3_val_f", 
-                      "J:/git/data_txt/result_su3_val_f_vy_false",
-                      "J:/git/data_txt/result_su3_vy_false"
-                      ]
-    su3_gt_new_dirs = [
-                        # "J:/git/data_txt/gt_su3_val_f", 
-                      "J:/git/data_txt/gt_su3_val_f_vy_false",
-                      "J:/git/data_txt/gt_su3_vy_false"
-                      ]
+    for su3_preds_dir in su3_gt_new_dirs:
+        if not os.path.exists(su3_preds_dir):
+            os.mkdir(su3_preds_dirs)
     for su3_preds_dir, su3_gt_new_dir in zip(su3_preds_dirs, su3_gt_new_dirs):
         pred_files = sorted(os.listdir(su3_preds_dir)) # TODO : gt_file을 보고 pred_file 이름을 알 수 있음
         # print(f"pred files {len(pred_files)}\n{pred_files[:5]}")
@@ -82,6 +70,29 @@ def main():
             save_filename = os.path.join(su3_gt_new_dir, pred_file)
             with open(save_filename, 'w') as f_save:
                 f_save.write(f"{gt_x}\t{gt_y}\n")
+
+
+def main():
+    # npz_filename = "data/0000_0_label.npz"
+    # s = su3_file(npz_filename)
+
+    su3_root = "J:/git/DeepGuider/bin/data/gt_su3"
+    gt_files = os.listdir(su3_root)
+    print(f"files : {len(gt_files)}\n{gt_files[:5]}")
+# 
+    su3_preds_dirs = [
+                        # "J:/git/data_txt/result_su3_val_f", 
+                    #   "J:/git/data_txt/result_su3_val_f_vy_false",
+                    #   "J:/git/data_txt/result_su3_vy_false",
+                    "J:/git/data_txt/result_exp3_su3",
+                      ]
+    su3_gt_new_dirs = [
+                        # "J:/git/data_txt/gt_su3_val_f", 
+                    #   "J:/git/data_txt/gt_su3_val_f_vy_false",
+                    #   "J:/git/data_txt/gt_su3_vy_false",
+                      "J:/git/data_txt/gt_exp3",
+                      ]
+    extract_vp_su3(su3_gt_new_dirs, su3_preds_dirs, su3_root)
 
 
 
