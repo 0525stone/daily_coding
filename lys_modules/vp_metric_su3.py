@@ -134,7 +134,7 @@ class vp_metric():
                             # print(f"vp_x, vp_y {gt_vp_x}, {gt_vp_y}\tresult : {pred_vp_x}, {pred_vp_y}")
 
                             # TODO : gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y 이렇게 네개로 누적 점수를 구하는 것이지
-                            aa_degree = self.get_degree(gt_x, gt_y, pred_vp_x, pred_vp_y, [256,256])
+                            aa_degree = self.get_degree(gt_x, gt_y, pred_vp_x, pred_vp_y, [512,512])
                             err.append(aa_degree)
                             if aa_degree<aa_threshold:
                                 good += 1
@@ -165,7 +165,7 @@ if __name__=="__main__":
                     # "J:/git/data_txt/gt_su3_val_f", 
                 #   "J:/git/data_txt/gt_su3_val_f_vy_false",
                 #   "J:/git/data_txt/gt_su3_vy_false",
-                    # "J:/git/data_txt/gt_exp1",
+                    "J:/git/data_txt/gt_exp1",
                     "J:/git/data_txt/gt_exp2",
                     "J:/git/data_txt/gt_exp3",
                     ]
@@ -173,7 +173,7 @@ if __name__=="__main__":
                         # "J:/git/data_txt/result_su3_val_f", 
                     #   "J:/git/data_txt/result_su3_val_f_vy_false",
                     #   "J:/git/data_txt/result_su3_vy_false",
-                    #   "J:/git/data_txt/result_exp1_su3",
+                      "J:/git/data_txt/result_exp1_su3",
                       "J:/git/data_txt/result_exp2_su3",
                       "J:/git/data_txt/result_exp3_su3",                      
                       ]

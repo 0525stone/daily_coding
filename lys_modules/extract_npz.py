@@ -48,13 +48,14 @@ def extract_vp_su3(su3_gt_new_dirs, su3_preds_dirs, su3_root):
 
         for idx, (gt_file, pred_file) in enumerate(zip(gt_files, pred_files)):
             # if idx<5:
-            filename = gt_file.split(".")[0][:-6]
-            print(f"{filename}\t{pred_file}")
+            filename = pred_file.split(".")[0]
+           
 
             # gt 3개의 점 읽어옴
-            gt_filename = os.path.join(su3_root,gt_file)
+            gt_filename = os.path.join(su3_root,f"{filename}_label.npz")
             gt_content = np.load(gt_filename)
             vpts = gt_content['vpts']
+            print(f"{gt_filename}\t{pred_file}")
             gt_y, gt_x = npz2points(vpts)
 
             # pred 1개의 점 읽어옴
@@ -68,8 +69,8 @@ def extract_vp_su3(su3_gt_new_dirs, su3_preds_dirs, su3_root):
             save_filename = os.path.join(su3_gt_new_dir, pred_file)
 
             print(f"{save_filename}\npoints\n{gt_x}\t{gt_y}\n{pred_x}\t{pred_y}")
-            # with open(save_filename, 'w') as f_save:
-            #     f_save.write(f"{gt_x}\t{gt_y}\n")
+            with open(save_filename, 'w') as f_save:
+                f_save.write(f"{gt_x}\t{gt_y}\n")
 
 
 def main():
@@ -84,17 +85,17 @@ def main():
                         # "J:/git/data_txt/result_su3_val_f", 
                     #   "J:/git/data_txt/result_su3_val_f_vy_false",
                     #   "J:/git/data_txt/result_su3_vy_false",
-                    "J:/git/data_txt/result_exp1_su3",
-                    # "J:/git/data_txt/result_exp2_su3",
-                    # "J:/git/data_txt/result_exp3_su3",
+                    # "J:/git/data_txt/result_exp1_su3",
+                    "J:/git/data_txt/result_exp2_su3",
+                    "J:/git/data_txt/result_exp3_su3",
                       ]
     su3_gt_new_dirs = [
                         # "J:/git/data_txt/gt_su3_val_f", 
                     #   "J:/git/data_txt/gt_su3_val_f_vy_false",
                     #   "J:/git/data_txt/gt_su3_vy_false",
-                      "J:/git/data_txt/gt_exp1",
-                    #   "J:/git/data_txt/gt_exp2",
-                    #   "J:/git/data_txt/gt_exp3",
+                    #   "J:/git/data_txt/gt_exp1",
+                      "J:/git/data_txt/gt_exp2",
+                      "J:/git/data_txt/gt_exp3",
                       ]
     extract_vp_su3(su3_gt_new_dirs, su3_preds_dirs, su3_root)
 
