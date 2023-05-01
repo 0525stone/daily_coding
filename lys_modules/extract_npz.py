@@ -37,11 +37,11 @@ def get1point(x, y, pred_x, pred_y):
     return min_x, min_y
 
 def extract_vp_su3(su3_gt_new_dirs, su3_preds_dirs, su3_root):
-    su3_root = "J:/git/DeepGuider/bin/data/gt_su3"
-    gt_files = os.listdir(su3_root)
-    for su3_preds_dir in su3_gt_new_dirs:
-        if not os.path.exists(su3_preds_dir):
-            os.mkdir(su3_preds_dirs)
+    # su3_root = "J:/git/DeepGuider/bin/data/gt_su3"
+    gt_files = sorted(os.listdir(su3_root))
+    for su3_gt_new_dir in su3_gt_new_dirs:
+        if not os.path.exists(su3_gt_new_dir):
+            os.mkdir(su3_gt_new_dir)
     for su3_preds_dir, su3_gt_new_dir in zip(su3_preds_dirs, su3_gt_new_dirs):
         pred_files = sorted(os.listdir(su3_preds_dir)) # TODO : gt_file을 보고 pred_file 이름을 알 수 있음
         # print(f"pred files {len(pred_files)}\n{pred_files[:5]}")
@@ -64,12 +64,12 @@ def extract_vp_su3(su3_gt_new_dirs, su3_preds_dirs, su3_root):
                 result_line = result_line[0].strip().split(',')
                 pred_x, pred_y = float(result_line[5]), float(result_line[6])
             
-            gt_x, gt_y = get1point(gt_x, gt_y, pred_x, pred_y)
-            print(f"points\n{gt_x}\t{gt_y}\n{pred_x}\t{pred_y}")
-            
+            gt_x, gt_y = get1point(gt_x, gt_y, pred_x, pred_y)         
             save_filename = os.path.join(su3_gt_new_dir, pred_file)
-            with open(save_filename, 'w') as f_save:
-                f_save.write(f"{gt_x}\t{gt_y}\n")
+
+            print(f"{save_filename}\npoints\n{gt_x}\t{gt_y}\n{pred_x}\t{pred_y}")
+            # with open(save_filename, 'w') as f_save:
+            #     f_save.write(f"{gt_x}\t{gt_y}\n")
 
 
 def main():
@@ -84,13 +84,17 @@ def main():
                         # "J:/git/data_txt/result_su3_val_f", 
                     #   "J:/git/data_txt/result_su3_val_f_vy_false",
                     #   "J:/git/data_txt/result_su3_vy_false",
-                    "J:/git/data_txt/result_exp3_su3",
+                    "J:/git/data_txt/result_exp1_su3",
+                    # "J:/git/data_txt/result_exp2_su3",
+                    # "J:/git/data_txt/result_exp3_su3",
                       ]
     su3_gt_new_dirs = [
                         # "J:/git/data_txt/gt_su3_val_f", 
                     #   "J:/git/data_txt/gt_su3_val_f_vy_false",
                     #   "J:/git/data_txt/gt_su3_vy_false",
-                      "J:/git/data_txt/gt_exp3",
+                      "J:/git/data_txt/gt_exp1",
+                    #   "J:/git/data_txt/gt_exp2",
+                    #   "J:/git/data_txt/gt_exp3",
                       ]
     extract_vp_su3(su3_gt_new_dirs, su3_preds_dirs, su3_root)
 
