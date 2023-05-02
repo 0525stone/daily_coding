@@ -16,7 +16,8 @@ class vp_metric():
         self.f = 10
         self.gt_paths = gt_paths
         self.result_paths = result_paths
-        self.AA_upper_th = 10000
+        self.AA_upper_th = 2000 # max of x-axis : upper_th * 10 / lower_th
+        self.AA_lower_th = 1000
 
         # AA 구하기 위해
         self.err_list = []
@@ -77,7 +78,7 @@ class vp_metric():
             labelname = os.path.basename(self.result_paths[i])
             
             for th in range(0,self.AA_upper_th*10,1):
-                th = th/1000
+                th = th/self.AA_lower_th
                 for idx, e in enumerate(err):
                     if e<th: # err 를 정렬하였기 때문에, 
                         aa = (len(err)-idx+1)/len(err)
@@ -121,7 +122,7 @@ class vp_metric():
                         gt_line = f_gt.readlines()
 
                         if len(gt_line)==1:
-                            print(os.path.join(gt_path, gt_filename))
+                            # print(os.path.join(gt_path, gt_filename))
                             gt = gt_line[0].strip().split('\t')
                             gt = [float(p) for p in gt]
                             gt_x, gt_y = gt
@@ -169,16 +170,16 @@ if __name__=="__main__":
                 #   "J:/git/data_txt/gt_su3_val_f_vy_false",
                 #   "J:/git/data_txt/gt_su3_vy_false",
                     f"{root_dir}/git/data_txt/gt_exp1",
-                    f"{root_dir}/git/data_txt/gt_exp2",
-                    f"{root_dir}/git/data_txt/gt_exp3",
+                    # f"{root_dir}/git/data_txt/gt_exp2",
+                    # f"{root_dir}/git/data_txt/gt_exp3",
                     ]
     su3_preds_dirs = [
                         # "J:/git/data_txt/result_su3_val_f", 
                     #   "J:/git/data_txt/result_su3_val_f_vy_false",
                     #   "J:/git/data_txt/result_su3_vy_false",
                       f"{root_dir}/git/data_txt/result_exp1_su3",
-                      f"{root_dir}/git/data_txt/result_exp2_su3",
-                      f"{root_dir}/git/data_txt/result_exp3_su3",                      
+                    #   f"{root_dir}/git/data_txt/result_exp2_su3",
+                    #   f"{root_dir}/git/data_txt/result_exp3_su3",                      
                       ]
 
     VP = vp_metric(su3_gt_dirs, su3_preds_dirs)
