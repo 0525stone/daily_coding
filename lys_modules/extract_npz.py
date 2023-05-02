@@ -78,7 +78,8 @@ def main():
     # s = su3_file(npz_filename)
 
     root_dir = "/Users/johnlee"  # "J:/"
-    su3_root = f"{root_dir}/git/DeepGuider/bin/data/gt_su3"
+    # su3_root = f"{root_dir}/git/DeepGuider/bin/data/gt_su3"
+    su3_root = f"{root_dir}/git/data_txt/su3_labels"
     gt_files = os.listdir(su3_root)
     print(f"files : {len(gt_files)}\n{gt_files[:5]}")
 
@@ -86,7 +87,7 @@ def main():
                         # "J:/git/data_txt/result_su3_val_f", 
                     #   "J:/git/data_txt/result_su3_val_f_vy_false",
                     #   "J:/git/data_txt/result_su3_vy_false",
-                    # "J:/git/data_txt/result_exp1_su3",
+                    f"{root_dir}/git/data_txt/result_exp1_su3",
                     f"{root_dir}/git/data_txt/result_exp2_su3",
                     f"{root_dir}/git/data_txt/result_exp3_su3",
                       ]
@@ -94,7 +95,7 @@ def main():
                         # "J:/git/data_txt/gt_su3_val_f", 
                     #   "J:/git/data_txt/gt_su3_val_f_vy_false",
                     #   "J:/git/data_txt/gt_su3_vy_false",
-                    #   "J:/git/data_txt/gt_exp1",
+                      f"{root_dir}/git/data_txt/gt_exp1",
                       f"{root_dir}/git/data_txt/gt_exp2",
                       f"{root_dir}/git/data_txt/gt_exp3",
                       ]

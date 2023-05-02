@@ -69,11 +69,12 @@ class vp_metric():
         y = np.concatenate([y[:index], [threshold]])
         return ((x[1:] - x[:-1]) * y[:-1]).sum() / threshold*100
 
-    def AA_graph(self, err_list, y):
+    def AA_graph(self, err_list, y, ):
         assert len(err_list)==len(self.result_paths), f"different size  {len(err_list)}  {len(self.result_paths)}"
         for i, err in enumerate(err_list):
             aa_list = []
             th_list = []
+            labelname = os.path.basename(self.result_paths[i])
             
             for th in range(0,self.AA_upper_th*10,1):
                 th = th/1000
@@ -83,7 +84,7 @@ class vp_metric():
                         th_list.append(th)
                         aa_list.append(aa)
                         break
-            plt.plot(th_list, aa_list, label=f"result_{i}")
+            plt.plot(th_list, aa_list, label=labelname)
             # print(f"{result_paths[i]}")
             print(f"AA@1 eq : {self.AA(th_list, aa_list, 1)}")
             print(f"AA@2 eq : {self.AA(th_list, aa_list, 2)}")
@@ -161,21 +162,23 @@ class vp_metric():
         
 
 if __name__=="__main__":
+
+    root_dir = "/Users/johnlee"  # "J:/"
     su3_gt_dirs = [
                     # "J:/git/data_txt/gt_su3_val_f", 
                 #   "J:/git/data_txt/gt_su3_val_f_vy_false",
                 #   "J:/git/data_txt/gt_su3_vy_false",
-                    "J:/git/data_txt/gt_exp1",
-                    "J:/git/data_txt/gt_exp2",
-                    "J:/git/data_txt/gt_exp3",
+                    f"{root_dir}/git/data_txt/gt_exp1",
+                    f"{root_dir}/git/data_txt/gt_exp2",
+                    f"{root_dir}/git/data_txt/gt_exp3",
                     ]
     su3_preds_dirs = [
                         # "J:/git/data_txt/result_su3_val_f", 
                     #   "J:/git/data_txt/result_su3_val_f_vy_false",
                     #   "J:/git/data_txt/result_su3_vy_false",
-                      "J:/git/data_txt/result_exp1_su3",
-                      "J:/git/data_txt/result_exp2_su3",
-                      "J:/git/data_txt/result_exp3_su3",                      
+                      f"{root_dir}/git/data_txt/result_exp1_su3",
+                      f"{root_dir}/git/data_txt/result_exp2_su3",
+                      f"{root_dir}/git/data_txt/result_exp3_su3",                      
                       ]
 
     VP = vp_metric(su3_gt_dirs, su3_preds_dirs)
