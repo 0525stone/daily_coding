@@ -61,8 +61,10 @@ class VP:
         # x = 10
         # y= 50
         if x<self.img.shape[0] and y<self.img.shape[1] and x>0 and y>0:
+            # print(f"point {x}, {y}")
+            self.img = cv2.circle(self.img, (int(x), int(y)), radius=5,color=(0,0,255), thickness=2)
+        else:
             print(f"point {x}, {y}")
-            self.img = cv2.circle(self.img, (int(x), int(y)), radius=10,color=(255,0,0), thickness=2)
         
     
     def show(self, windowname="result"):
@@ -75,14 +77,18 @@ def main():
     su3 를 기준으로 vanishing point 확인하는 코드 필요
     """
     print("EDA")
-    filename = "/Users/johnlee/git/daily_coding/data/su3/002_0085_0.png"
-    vp = VP(filename)
-    vp.read_infos()
-    vpts_exist = vp.get_vps()
-    if vpts_exist:
-        for i in range(len(vp.vpts_x)):
-            vp.draw_point(vp.vpts_x[i],vp.vpts_y[i])
-    vp.show()
+    su3_check_dir = "/Users/johnlee/git/daily_coding/data/su3"
+    file_list = os.listdir(su3_check_dir)
+    for filename in file_list:
+        filename = os.path.join(su3_check_dir, filename)
+        # filename = "/Users/johnlee/git/daily_coding/data/su3/002_0085_0.png"
+        vp = VP(filename)
+        vp.read_infos()
+        vpts_exist = vp.get_vps()
+        if vpts_exist:
+            for i in range(len(vp.vpts_x)):
+                vp.draw_point(vp.vpts_x[i],vp.vpts_y[i])
+        vp.show()
     
 
 if __name__=="__main__":
