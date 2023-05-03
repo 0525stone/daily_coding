@@ -58,8 +58,12 @@ class VP:
         외부에서 읽은 점으로 찍어보는 것 가능
         parameter로 cv2.circle 관련 파라미터 받는 것도 좋을 듯
         """
-        if x<
-        pass
+        # x = 10
+        # y= 50
+        if x<self.img.shape[0] and y<self.img.shape[1] and x>0 and y>0:
+            print(f"point {x}, {y}")
+            self.img = cv2.circle(self.img, (int(x), int(y)), radius=10,color=(255,0,0), thickness=2)
+        
     
     def show(self, windowname="result"):
         cv2.imshow("result", self.img)
@@ -78,7 +82,7 @@ def main():
     if vpts_exist:
         for i in range(len(vp.vpts_x)):
             vp.draw_point(vp.vpts_x[i],vp.vpts_y[i])
-    # vp.show()
+    vp.show()
     
 
 if __name__=="__main__":
