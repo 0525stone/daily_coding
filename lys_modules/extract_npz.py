@@ -9,7 +9,7 @@ class su3_file():
         self.contents = np.load(filename)
         vpts = self.contents['vpts']
         print(vpts)
-        y,x = self.to_pixel(vpts)
+        y,x = self.to_pixel(vpts, focal_length=2.1875)
         print(f"vpts 결과 {x}, {y}")
     def to_pixel(self, vpts, focal_length=1.0, h=512, w=512): # 기존 h=480, w=640
         x = vpts[:,0] / vpts[:, 2] * focal_length * max(h, w)/2.0 + w//2
@@ -94,17 +94,19 @@ def main():
                         # "J:/git/data_txt/result_su3_val_f", 
                     #   "J:/git/data_txt/result_su3_val_f_vy_false",
                     #   "J:/git/data_txt/result_su3_vy_false",
-                    f"{root_dir}/git/data_txt/result_exp1_su3",
+                    # f"{root_dir}/git/data_txt/result_exp1_su3",
                     # f"{root_dir}/git/data_txt/result_exp2_su3",
                     # f"{root_dir}/git/data_txt/result_exp3_su3",
+                    f"{root_dir}/git/data_txt/result_su3_sample_new",
                       ]
     su3_gt_new_dirs = [
                         # "J:/git/data_txt/gt_su3_val_f", 
                     #   "J:/git/data_txt/gt_su3_val_f_vy_false",
                     #   "J:/git/data_txt/gt_su3_vy_false",
-                      f"{root_dir}/git/data_txt/gt_exp1",
+                    #   f"{root_dir}/git/data_txt/gt_exp1",
                     #   f"{root_dir}/git/data_txt/gt_exp2",
                     #   f"{root_dir}/git/data_txt/gt_exp3",
+                    f"{root_dir}/git/data_txt/gt_su3_sample_new",
                       ]
     extract_vp_su3(su3_gt_new_dirs, su3_preds_dirs, su3_root)
 
