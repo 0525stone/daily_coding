@@ -59,21 +59,18 @@ def copy_all_file(dir_root, dst_root, format='.jpg'):
 #     print(f"{idx}\t{from_filename}\t{to_filename}")
 #     shutil.copy(from_filename, to_filename)
 
-# root_dir = "/Volumes/새 볼륨/git/DeepGuider/bin/data/su3"
-# dst_dir = "/Volumes/새 볼륨/git/DeepGuider/bin/data/gt_su3"
-
-# su3_dirs = os.listdir(root_dir)
-
-# print(f"{len(su3_dirs)}")
-# for idx, su3_dir in enumerate(tqdm(su3_dirs)):
-#     # if idx<5:
-#     su3_files = os.listdir(os.path.join(root_dir,su3_dir))
-#     su3_files = [f for f in su3_files if ".npz" in f]
-#     # print(f"files : {len(su3_files)}")
-#     for su3_file in su3_files:
-#         from_filename = os.path.join(root_dir, su3_dir, su3_file)
-#         to_filename = os.path.join(dst_dir, f"{su3_dir}_{su3_file}")
-#         shutil.copy(from_filename, to_filename)
+def file_copy_dir2dir(root_dir, su3_dirs, dst_dir):
+    # su3 file 복사 => evaluation 하기 위해서
+    print(f"{len(su3_dirs)}")
+    for idx, su3_dir in enumerate(tqdm(su3_dirs)):
+        # if idx<5:
+        su3_files = os.listdir(os.path.join(root_dir,su3_dir))
+        su3_files = [f for f in su3_files if ".npz" in f]
+        # print(f"files : {len(su3_files)}")
+        for su3_file in su3_files:
+            from_filename = os.path.join(root_dir, su3_dir, su3_file)
+            to_filename = os.path.join(dst_dir, f"{su3_dir}_{su3_file}")
+            shutil.copy(from_filename, to_filename)
 
 def file_copy_txt(txt_filename, root_dir="", dst_dir=""):
     """
@@ -113,6 +110,7 @@ def su3file_copy_sampling(root_path_img, root_path_label, dst_path_img, dst_path
 
 
 def main():
+<<<<<<< Updated upstream
     # # valid.txt 안에 있는 파일들 옮겨주는 코드
     # root_dir ="D:/git/DeepGuider/bin/data/tmm17/vp-labels"
     # dst_dir = "D:/git/DeepGuider/bin/gt_valid"
@@ -130,7 +128,22 @@ def main():
     # dst_path_img = "J:/git/DeepGuider/bin/data/gt_su3_sample"
     # dst_path_label = "J:/git/DeepGuider/bin/data/gt_su3_sample_labels"
     # su3file_copy_sampling(root_path_img, root_path_label, dst_path_img, dst_path_label, sample_N=2000)
+=======
+    # valid.txt 파일들 옮기기
+    root_dir ="D:/git/DeepGuider/bin/data/tmm17/vp-labels"
+    dst_dir = "D:/git/DeepGuider/bin/gt_valid"
+    txt_filename= "D:/git/DeepGuider/bin/data/tmm17/valid.txt"
+    file_copy_txt(txt_filename, root_dir, dst_dir)
+>>>>>>> Stashed changes
 
+
+    # su3 file copy
+    root_dir = "/Volumes/새 볼륨/git/DeepGuider/bin/data/su3"
+    dst_dir = "/Volumes/새 볼륨/git/DeepGuider/bin/data/gt_su3"
+
+    su3_dirs = os.listdir(root_dir)
+    
+    file_copy_dir2dir(root_dir, su3_dirs, dst_dir)
 
 if __name__=="__main__":
     main()

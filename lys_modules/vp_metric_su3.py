@@ -70,21 +70,23 @@ class vp_metric():
         y = np.concatenate([y[:index], [threshold]])
         return ((x[1:] - x[:-1]) * y[:-1]).sum() / threshold*100
 
-    def AA_graph(self, err_list, y):
+    def AA_graph(self, err_list, y, ):
         assert len(err_list)==len(self.result_paths), f"different size  {len(err_list)}  {len(self.result_paths)}"
         for i, err in enumerate(err_list):
             aa_list = []
             th_list = []
+            labelname = os.path.basename(self.result_paths[i])
             
             for th in range(0,self.AA_upper_th,1):
                 th = th/self.AA_upper_th_lower
+
                 for idx, e in enumerate(err):
                     if e<th: # err 를 정렬하였기 때문에, 
                         aa = (len(err)-idx+1)/len(err)
                         th_list.append(th)
                         aa_list.append(aa)
                         break
-            plt.plot(th_list, aa_list, label=f"result_{i}")
+            plt.plot(th_list, aa_list, label=labelname)
             # print(f"{result_paths[i]}")
             print(f"AA@1 eq : {self.AA(th_list, aa_list, 1)}")
             print(f"AA@2 eq : {self.AA(th_list, aa_list, 2)}")
@@ -121,7 +123,7 @@ class vp_metric():
                         gt_line = f_gt.readlines()
 
                         if len(gt_line)==1:
-                            print(os.path.join(gt_path, gt_filename))
+                            # print(os.path.join(gt_path, gt_filename))
                             gt = gt_line[0].strip().split('\t')
                             gt = [float(p) for p in gt]
                             gt_x, gt_y = gt
@@ -162,6 +164,8 @@ class vp_metric():
         
 
 if __name__=="__main__":
+
+    root_dir = "/Users/johnlee"  # "J:/"
     su3_gt_dirs = [
                     # "J:/git/data_txt/gt_su3_val_f", 
                 #   "J:/git/data_txt/gt_su3_val_f_vy_false",

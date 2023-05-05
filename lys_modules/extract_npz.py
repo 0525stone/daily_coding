@@ -91,6 +91,7 @@ def main():
     root_dir =  "J:" # "/Users/johnlee" ,"J:/"
     su3_root = f"{root_dir}/git/DeepGuider/bin/data/gt_su3"
     # su3_root = f"{root_dir}/git/data_txt/su3_labels"
+
     gt_files = os.listdir(su3_root)
     print(f"files : {len(gt_files)}\n{gt_files[:5]}")
 
