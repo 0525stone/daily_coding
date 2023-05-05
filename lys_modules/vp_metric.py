@@ -150,26 +150,32 @@ class vp_metric():
         
 
 if __name__=="__main__":
+    
+    root_dir = "J:" #  "/Users/johnlee" ,"J:/"
     dataset_name = "ava"
     dataset_name = "flickr"
     # dataset_name = "su3" 
+    dataset_name = "valid"
 
     if dataset_name=="ava":
-        gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_ava" # "D:\git\data_txt/vp-labels/gt_ava"
+        gt_path = f"{root_dir}/git/data_txt/vp-labels/gt_ava" # "D:\git\data_txt/vp-labels/gt_ava"
         result_paths = [
-                        "/Users/johnlee/git/daily_coding/vp_data/result_ava", 
-                    "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
-                    "/Users/johnlee/git/daily_coding/vp_data/result_ava_vy_false",
-                    "/Users/johnlee/git/daily_coding/vp_data/result_ava_val_f_vy_false"
+                    # f"{root_dir}/git/data_txt/result_ava", 
+                    # f"{root_dir}/git/data_txt/result_ava_geo_false_vy_false",
+                    # f"{root_dir}/git/data_txt/result_ava_vy_false",
+                    # f"{root_dir}/git/data_txt/result_ava_val_f_vy_false",
+                    f"{root_dir}/git/data_txt/result_ava_val_f_vy_false",
                     ]
     elif dataset_name=="flickr":
-        gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_flickr" # "D:\git\data_txt/vp-labels/gt_ava"
+        gt_path = f"{root_dir}/git/data_txt/vp-labels/gt_flickr" # "D:\git\data_txt/vp-labels/gt_ava"
         result_paths = [
-                "/Users/johnlee/git/daily_coding/vp_data/result_flickr", 
-                "/Users/johnlee/git/daily_coding/vp_data/result_flickr_geo_false_vy_false",
-                "/Users/johnlee/git/daily_coding/vp_data/result_filckr_vy_false",
-                    "/Users/johnlee/git/daily_coding/vp_data/result_flickr_val_f_vy_false"
+                # f"{root_dir}/git/data_txt/result_flickr", 
+                # f"{root_dir}/git/data_txt/result_flickr_geo_false_vy_false",
+                # f"{root_dir}/git/data_txt/result_filckr_vy_false",
+                # f"{root_dir}/git/data_txt/result_flickr_val_f_vy_false",
+                f"{root_dir}/git/data_txt/result_flickr_val_f_vy_false",
         ]
+        
     VP = vp_metric(gt_path, result_paths)
     VP.result_summary()
     

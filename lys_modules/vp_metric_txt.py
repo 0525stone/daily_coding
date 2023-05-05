@@ -153,29 +153,31 @@ class vp_metric_txt():
     
 
 if __name__=="__main__":
-    dataset_name = "ava"
-    dataset_name = "flickr"
-    # dataset_name = "su3" 
 
-    if dataset_name=="ava":
-        gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_ava" # "D:\git\data_txt/vp-labels/gt_ava"
-        result_paths = [
-                        "/Users/johnlee/git/daily_coding/vp_data/result_ava", 
-                    "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
-                    "/Users/johnlee/git/daily_coding/vp_data/result_ava_vy_false",
-                    "/Users/johnlee/git/daily_coding/vp_data/result_ava_val_f_vy_false"
-                    ]
-    elif dataset_name=="flickr":
-        dir_root = "D:\git\data_txt"
-        gt_path = f"{dir_root}/vp-labels/gt_ava"# "/Users/johnlee/git/daily_coding/vp_data/gt_flickr" # "D:\git\data_txt/vp-labels/gt_ava"
-        result_paths = [
-                "/Users/johnlee/git/daily_coding/vp_data/result_flickr", #"/Users/johnlee/git/daily_coding/vp_data/result_flickr", 
-                "/Users/johnlee/git/daily_coding/vp_data/result_flickr_geo_false_vy_false",
-                "/Users/johnlee/git/daily_coding/vp_data/result_filckr_vy_false",
-                    "/Users/johnlee/git/daily_coding/vp_data/result_flickr_val_f_vy_false"
-        ]
-    dir_root = "D:/git/data_txt"
-    file_txt = f"{dir_root}/valid.txt" # D:/git/DeepGuider/bin/data/tmm17/valid.txt
+    # root_dir = "J:/" # J:/   /Users/johnlee
+    # dataset_name = "ava"
+    # dataset_name = "flickr"
+    # # dataset_name = "su3" 
+
+    # if dataset_name=="ava":
+    #     gt_path = "/Users/johnlee/git/daily_coding/vp_data/gt_ava" # "D:\git\data_txt/vp-labels/gt_ava"
+    #     result_paths = [
+    #                     "/Users/johnlee/git/daily_coding/vp_data/result_ava", 
+    #                 "/Users/johnlee/git/daily_coding/vp_data/result_ava_geo_false_vy_false",
+    #                 "/Users/johnlee/git/daily_coding/vp_data/result_ava_vy_false",
+    #                 "/Users/johnlee/git/daily_coding/vp_data/result_ava_val_f_vy_false"
+    #                 ]
+    # elif dataset_name=="flickr":
+    #     dir_root = "D:\git\data_txt"
+    #     gt_path = f"{dir_root}/vp-labels/gt_ava"# "/Users/johnlee/git/daily_coding/vp_data/gt_flickr" # "D:\git\data_txt/vp-labels/gt_ava"
+    #     result_paths = [
+    #             "/Users/johnlee/git/daily_coding/vp_data/result_flickr", #"/Users/johnlee/git/daily_coding/vp_data/result_flickr", 
+    #             "/Users/johnlee/git/daily_coding/vp_data/result_flickr_geo_false_vy_false",
+    #             "/Users/johnlee/git/daily_coding/vp_data/result_filckr_vy_false",
+    #                 "/Users/johnlee/git/daily_coding/vp_data/result_flickr_val_f_vy_false"
+    #     ]
+    dir_root = "J:/git/data_txt"
+    file_txt = f"{dir_root}/gt_valid/valid.txt" # D:/git/DeepGuider/bin/data/tmm17/valid.txt
     gt_path = f"{dir_root}/gt_valid"
     result_paths = f"{dir_root}/result_valid1"
     
