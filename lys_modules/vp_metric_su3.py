@@ -22,9 +22,9 @@ class vp_metric():
         # AA 구하기 위해
         self.err_list = []
     
-    def vectorize(self, point_x, point_y, w):
-        cx = w[0]/2
-        cy = w[1]/2
+    def vectorize(self, point_x, point_y, wh):
+        cx = wh[0]/2
+        cy = wh[1]/2
         f = 2.1875 * 256 # w[0]/2
         vector = [(point_x-cx)/f, (point_y-cy)/f, 1]
         norm = np.sqrt(vector[0]*vector[0]+vector[1]*vector[1]+1)
@@ -46,11 +46,11 @@ class vp_metric():
 
         return vp_x, vp_y
 
-    def get_degree(self, gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w):
+    def get_degree(self, gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, wh):
         # print(f"To get AA in width {w}\ngt\t{gt_vp_x},{gt_vp_y}\nresult\t{pred_vp_x},{pred_vp_y}")
-        w = np.array(w)
-        vector_vp = self.vectorize(pred_vp_x, pred_vp_y, w)
-        vector_gt = self.vectorize(gt_vp_x, gt_vp_y, w)
+        wh = np.array(wh)
+        vector_vp = self.vectorize(pred_vp_x, pred_vp_y, wh)
+        vector_gt = self.vectorize(gt_vp_x, gt_vp_y, wh)
 
         dot_gt_vp = (np.array(vector_vp) @ np.array(vector_gt)) # .clip(max=1)
         degree = np.arccos(dot_gt_vp)*180/np.pi # neurvps 에서는 err로 되어있는 변수
