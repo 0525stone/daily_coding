@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from vp_utils import vectorize, find_vp, get_degree, AA
+from vp_utils import vector_normalize, find_vp, get_degree, AA
 from vp_metric_su3 import vp_metric
 
 class su3_file():

@@ -5,7 +5,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
-def vectorize(point_x, point_y, w):
+def vector_normalize(point_x, point_y, w):
     cx = w[0]/2
     cy = w[1]/2
     f = w[0]/2
@@ -32,8 +32,8 @@ def find_vp(gt1, gt2):
 def get_degree(gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, w):
     # print(f"To get AA in width {w}\ngt\t{gt_vp_x},{gt_vp_y}\nresult\t{pred_vp_x},{pred_vp_y}")
     w = np.array(w)
-    vector_vp = vectorize(pred_vp_x, pred_vp_y, w)
-    vector_gt = vectorize(gt_vp_x, gt_vp_y, w)
+    vector_vp = vector_normalize(pred_vp_x, pred_vp_y, w)
+    vector_gt = vector_normalize(gt_vp_x, gt_vp_y, w)
 
     dot_gt_vp = (np.array(vector_vp) @ np.array(vector_gt)) # .clip(max=1)
     degree = np.arccos(dot_gt_vp)*180/np.pi # neurvps 에서는 err로 되어있는 변수
