@@ -16,7 +16,8 @@ class vp_metric():
         self.f = 10
         self.gt_paths = gt_paths
         self.result_paths = result_paths
-        self.AA_upper_th = 10000
+        self.AA_upper_th = 20000 # 20.000
+        self.AA_upper_th_lower = 1000
 
         # AA 구하기 위해
         self.err_list = []
@@ -24,7 +25,7 @@ class vp_metric():
     def vectorize(self, point_x, point_y, w):
         cx = w[0]/2
         cy = w[1]/2
-        f = w[0]/2
+        f = 2.1875 * 256 # w[0]/2
         vector = [(point_x-cx)/f, (point_y-cy)/f, 1]
         norm = np.sqrt(vector[0]*vector[0]+vector[1]*vector[1]+1)
         return vector/norm
@@ -75,8 +76,8 @@ class vp_metric():
             aa_list = []
             th_list = []
             
-            for th in range(0,self.AA_upper_th*10,1):
-                th = th/1000
+            for th in range(0,self.AA_upper_th,1):
+                th = th/self.AA_upper_th_lower
                 for idx, e in enumerate(err):
                     if e<th: # err 를 정렬하였기 때문에, 
                         aa = (len(err)-idx+1)/len(err)
@@ -165,17 +166,19 @@ if __name__=="__main__":
                     # "J:/git/data_txt/gt_su3_val_f", 
                 #   "J:/git/data_txt/gt_su3_val_f_vy_false",
                 #   "J:/git/data_txt/gt_su3_vy_false",
-                    "J:/git/data_txt/gt_exp1",
-                    "J:/git/data_txt/gt_exp2",
-                    "J:/git/data_txt/gt_exp3",
+                    # "J:/git/data_txt/gt_exp1",
+                    # "J:/git/data_txt/gt_exp2",
+                    # "J:/git/data_txt/gt_exp3",
+                    "J:/git/data_txt/gt_su3_sample_new",
                     ]
     su3_preds_dirs = [
                         # "J:/git/data_txt/result_su3_val_f", 
                     #   "J:/git/data_txt/result_su3_val_f_vy_false",
                     #   "J:/git/data_txt/result_su3_vy_false",
-                      "J:/git/data_txt/result_exp1_su3",
-                      "J:/git/data_txt/result_exp2_su3",
-                      "J:/git/data_txt/result_exp3_su3",                      
+                    #   "J:/git/data_txt/result_exp1_su3",
+                    #   "J:/git/data_txt/result_exp2_su3",
+                    #   "J:/git/data_txt/result_exp3_su3",
+                      "J:/git/data_txt/result_su3_sample_new",                      
                       ]
 
     VP = vp_metric(su3_gt_dirs, su3_preds_dirs)
