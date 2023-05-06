@@ -20,6 +20,8 @@ class VP:
         self.json = f"{self.filename}_camera.json"
         self.npz = f"{self.filename}_label.npz"
         self.jlk = f"{self.filename}.jlk"
+        self.pred = f"{self.filename}.txt"
+        print(f"{self.json}\t{self.npz}")
         self.focal_length = 2.1875
 
     def read_infos(self):
@@ -30,7 +32,15 @@ class VP:
             with open(self.json, "r") as st_json:
                 self.json_data = json.load(st_json)
                 print(self.json_data)
+            with open(self.pred, "r") as st_pred:
+                self.pred_data = st_pred.readlines()
+                self.pred_data = self.pred_data[0].split('\t')
+                self.pred_data = [float(i) for i in self.pred_data]
+                self.pred_data = [int(self.pred_data[0]),int(self.pred_data[1])]
+                print("pred : ", self.pred_data)
             self.npz_data = np.load(self.npz)
+
+
         except:
             print("some file cannot be read")
 
@@ -53,7 +63,7 @@ class VP:
         # cv2.line(self.img, (pt1, pt2))
         pass
 
-    def draw_point(self, x, y):
+    def draw_point(self, x, y, color=(0,0,255)):
         """
         외부에서 읽은 점으로 찍어보는 것 가능
         parameter로 cv2.circle 관련 파라미터 받는 것도 좋을 듯
@@ -62,7 +72,7 @@ class VP:
         # y= 50
         if x<self.img.shape[0] and y<self.img.shape[1] and x>0 and y>0:
             # print(f"point {x}, {y}")
-            self.img = cv2.circle(self.img, (int(x), int(y)), radius=5,color=(0,0,255), thickness=2)
+            self.img = cv2.circle(self.img, (int(x), int(y)), radius=5,color=color, thickness=2)
         else:
             print(f"point {x}, {y}")
         
@@ -77,10 +87,12 @@ def main():
     su3 를 기준으로 vanishing point 확인하는 코드 필요
     """
     print("EDA")
-    su3_check_dir = "/Users/johnlee/git/daily_coding/data/su3"
+    dir_root = "j:" # /Users/johnlee
+    su3_check_dir = f"{dir_root}/git/daily_coding/data/su3"
     file_list = os.listdir(su3_check_dir)
+    file_list = [d for d in file_list if ".png" in d]
     for filename in file_list:
-        filename = os.path.join(su3_check_dir, filename)
+        filename = f"{su3_check_dir}/{filename}" #os.path.join(su3_check_dir, filename)
         # filename = "/Users/johnlee/git/daily_coding/data/su3/002_0085_0.png"
         vp = VP(filename)
         vp.read_infos()
@@ -88,6 +100,7 @@ def main():
         if vpts_exist:
             for i in range(len(vp.vpts_x)):
                 vp.draw_point(vp.vpts_x[i],vp.vpts_y[i])
+                vp.draw_point(vp.pred_data[0], vp.pred_data[1],color=(0,255,0))
         vp.show()
     
 

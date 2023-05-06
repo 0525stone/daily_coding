@@ -11,12 +11,12 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
-class vp_metric():
+class vp_metric_su3():
     def __init__(self, gt_paths, result_paths):
         self.f = 10
         self.gt_paths = gt_paths
         self.result_paths = result_paths
-        self.AA_upper_th = 20000 # 20.000
+        self.AA_upper_th = 20000 # 20.000 degree
         self.AA_upper_th_lower = 1000
 
         # AA 구하기 위해
@@ -26,33 +26,35 @@ class vp_metric():
         cx = wh[0]/2
         cy = wh[1]/2
         f = 2.1875 * 256 # w[0]/2
-        vector = [(point_x-cx)/f, (point_y-cy)/f, 1]
-        norm = np.sqrt(vector[0]*vector[0]+vector[1]*vector[1]+1)
-        return vector/norm
+        vector = [(point_x-cx), (point_y-cy), f]
+        # norm = np.sqrt(vector[0]*vector[0]+vector[1]*vector[1]+f*f)
+        return vector#/norm
 
-    def find_vp(self, gt1, gt2):
-        assert len(gt1)==4, f"gt1 has less than 4 components({len(gt1)})"
-        gt1 = [int(i) for i in gt1]
-        gt2 = [int(i) for i in gt2]
-        a1 = gt1[3]-gt1[1]
-        b1 = gt1[0]-gt1[2]
-        c1 = gt1[1]*(gt1[2]-gt1[0])-gt1[0]*(gt1[3]-gt1[1])
-        a2 = gt2[3]-gt2[1]
-        b2 = gt2[0]-gt2[2]
-        c2 = gt2[1]*(gt2[2]-gt2[0])-gt2[0]*(gt2[3]-gt2[1])
+    # def find_vp(self, gt1, gt2):
+    #     assert len(gt1)==4, f"gt1 has less than 4 components({len(gt1)})"
+    #     gt1 = [int(i) for i in gt1]
+    #     gt2 = [int(i) for i in gt2]
+    #     a1 = gt1[3]-gt1[1]
+    #     b1 = gt1[0]-gt1[2]
+    #     c1 = gt1[1]*(gt1[2]-gt1[0])-gt1[0]*(gt1[3]-gt1[1])
+    #     a2 = gt2[3]-gt2[1]
+    #     b2 = gt2[0]-gt2[2]
+    #     c2 = gt2[1]*(gt2[2]-gt2[0])-gt2[0]*(gt2[3]-gt2[1])
 
-        vp_x = (c2*b1-c1*b2)/(a1*b2-a2*b1)
-        vp_y = (a1*c2-a2*c1)/(a2*b1-a1*b2)
+    #     vp_x = (c2*b1-c1*b2)/(a1*b2-a2*b1)
+    #     vp_y = (a1*c2-a2*c1)/(a2*b1-a1*b2)
 
-        return vp_x, vp_y
+    #     return vp_x, vp_y
 
     def get_degree(self, gt_vp_x, gt_vp_y, pred_vp_x, pred_vp_y, wh):
         # print(f"To get AA in width {w}\ngt\t{gt_vp_x},{gt_vp_y}\nresult\t{pred_vp_x},{pred_vp_y}")
         wh = np.array(wh)
         vector_vp = self.vector_normalize(pred_vp_x, pred_vp_y, wh)
         vector_gt = self.vector_normalize(gt_vp_x, gt_vp_y, wh)
+        vp_norm = np.linalg.norm(vector_vp)
+        gt_norm = np.linalg.norm(vector_gt)
 
-        dot_gt_vp = (np.array(vector_vp) @ np.array(vector_gt)) # .clip(max=1)
+        dot_gt_vp = (np.array(vector_vp) @ np.array(vector_gt))/(vp_norm*gt_norm) # .clip(max=1)
         degree = np.arccos(dot_gt_vp)*180/np.pi # neurvps 에서는 err로 되어있는 변수
         return degree
 
@@ -100,8 +102,6 @@ class vp_metric():
 
         print(len(self.gt_paths))
         for _,(gt_path, result_path) in enumerate(zip(self.gt_paths,self.result_paths)):
-    
-            
             gt_files = sorted(os.listdir(gt_path))
             result_files = sorted(os.listdir(result_path))
 
@@ -185,6 +185,6 @@ if __name__=="__main__":
                       "J:/git/data_txt/result_su3_sample_new",                      
                       ]
 
-    VP = vp_metric(su3_gt_dirs, su3_preds_dirs)
+    VP = vp_metric_su3(su3_gt_dirs, su3_preds_dirs)
     VP.result_summary()
     
