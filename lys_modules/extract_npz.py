@@ -20,7 +20,7 @@ class su3_file():
         y = -w[1] / w[2] * focal_length * 256 + 256
         return y, x
         
-def npz2points(vpts, focal_length=1.0, h=512, w=512): # 기존 h=480, w=640
+def npz2points(vpts, focal_length=2.1875, h=512, w=512): # 기존 h=480, w=640
     x = vpts[:,0] / vpts[:, 2] * focal_length * max(h, w)/2.0 + w//2
     y = -vpts[:,1] / vpts[:, 2] * focal_length * max(h, w)/2.0 + h//2
     return y, x
@@ -32,7 +32,7 @@ def npz2points(vpts, focal_length=1.0, h=512, w=512): # 기존 h=480, w=640
 #     return y, x
 
 
-def get1point(x, y, pred_x, pred_y):
+def get1point(x, y, pred_x, pred_y): # x,y : gt_x, gt_y
     """
     gt 3개와 pred 주면 제일 가까운 점 하나를 찾아줌
     """

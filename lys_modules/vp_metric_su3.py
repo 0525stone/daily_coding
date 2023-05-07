@@ -6,7 +6,7 @@ extract_npz 로 나온 각 su3 상황에 맞는 gt를 갖고 결과 확인
 import os
 import cv2
 
-from tqdm import tqdm
+# from tqdm import tqdm
 import math
 import numpy as np
 import matplotlib.pyplot as plt
@@ -72,7 +72,7 @@ class vp_metric_su3():
         y = np.concatenate([y[:index], [threshold]])
         return ((x[1:] - x[:-1]) * y[:-1]).sum() / threshold*100
 
-    def AA_graph(self, err_list, y, ):
+    def AA_graph(self, err_list, ):
         assert len(err_list)==len(self.result_paths), f"different size  {len(err_list)}  {len(self.result_paths)}"
         for i, err in enumerate(err_list):
             aa_list = []
