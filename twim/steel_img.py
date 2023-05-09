@@ -133,7 +133,7 @@ def main():
 
     # dst_img = perspective_transform(src_img, input_pts, width=1920 , height=1080)
 
-    st = steelimg(img_dir=img_dir, src_pts=input_pts)
+    st = steel_img(img_dir=img_dir, src_pts=input_pts)
     st.transform()
     st.concat_src_dst()
     # st.show()
