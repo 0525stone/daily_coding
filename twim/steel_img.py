@@ -2,7 +2,7 @@ import cv2
 import copy
 import numpy as np
 
-class steelimg():
+class steel_img():
     def __init__(self, img_dir, src_pts, dst_width=1290, dst_height=1080):
         self.img_dir = img_dir
         self.src_pts = src_pts
