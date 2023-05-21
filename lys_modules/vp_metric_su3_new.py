@@ -1,5 +1,8 @@
 """
 AA 그리는 것도 염두해둬야함
+
+더 나은 구조는 vp_metric 하는 클래스 두고 상위에 데이터셋별 클래스를 두는 것임...
+su3
 """
 import os
 import cv2
@@ -15,9 +18,16 @@ class Su3():
         self.gt_root = ground_truth_root # TODO : 데이터에 대한 객체를 만들어야하나?
         self.result_root = result_root
 
-        self.gt_format = '.npz' # '.json'
+        # 필요 파라미터들
+        self.gt_format = '.npz' # '.json' TODO : json에 대해서도 읽을 수 있게 해야함ㄴ
+        self.img_ok = False
+
+        # points 정보들 들고 있어야하나?
+        self.gt_pts = [] # 몇만개의 데이터에 대해서 갖고 있게끔 하는게 맞을까? 그때 그때 읽어서 하는게 나을듯
+        self.result_pts = []
 
         self.init_data()
+        self.loop_files()
 
     def summary(self):
         print(f"Ground truth root : {self.gt_root} files : {len(self.gt_files)}")
@@ -34,21 +44,67 @@ class Su3():
             filename = os.path.basename(f)
             f_dir = filename.split('_')[0]
             fname = '_'.join(os.path.basename(f).split('_')[1:]).split('.')[0]
-            gt_filename = f"{self.gt_root}/{f_dir}/{fname}{self.gt_format}"
+            if self.gt_format=='.npz':
+                gt_filename = f"{self.gt_root}/{f_dir}/{fname}_label{self.gt_format}"
+            elif self.gt_format=='.json': 
+                gt_filename = f"{self.gt_root}/{f_dir}/{fname}_camera{self.gt_format}"
             self.gt_files.append(gt_filename)
                 
     def loop_files(self):
-        for idx, gt, result in enumerate(zip(self.gt_files, self.result_files)):
+        for idx, (gt, result) in enumerate(zip(self.gt_files, self.result_files)): # FIXME : gt, result없이 그냥 idx만 읽게 해도됨
             assert gt!=result, f"{gt}\t{result}"
-            self.check_degree(idx)
-    
-    def check_degree(self, idx):
+            if idx<1:
+                if self.img_ok:
+                    self.check_img()
+            # FIXME : 예외처리해야함. 파일 만약에 없는 경우...
+                self.read_data(idx) # TODO : idx로 img를 불러오려면.. 
+                
+
+    def read_data(self, idx):
+        gt_filename = self.gt_files[idx]
+        result_filename = self.result_files[idx]
+
+        gt_pt = self.read_gt(gt_filename)
+        result_pt = self.read_result(result_filename)
+        degree = self.get_degree()
+
+        if self.img_ok:
+            gt_x, gt_y = self.to_pixel(gt_pt) # FIXME : 입력 gt_pt 조정 필요
+            self.check_img()
+
+    def read_gt(self,gt_filename):
+        gt_filename = os.path.join(self.gt_root,gt_filename)
+        if self.gt_format=='.npz':
+            gt = np.load(gt_filename)
+            gt = gt['vpts']
+            # gt = self.gt3points(gt)
+        return gt
+
+    def read_result(self, result_filename):
+        # result는 전부 txt 일 예정
+        result_filename = os.path.join(self.result_root, result_filename)
+        with open(result_filename, 'r') as f:
+            lines = f.readlines()
+            lines = lines[0].strip().split(',')
+            pred_x, pred_y = float(lines[5]), float(lines[6])
+        return [pred_x, pred_y]
+        
+    def get_degree(self, gt, result):
         pass
 
     def check_img(self):
         pass
 
+    # # ========================= utils에 뺄까? ==============================
+    def gt3points(self, vpts, focal_length=2.1875, h=512, w=512): # 기존 h=480, w=640
+        x = vpts[:,0] / vpts[:, 2] * focal_length * max(h, w)/2.0 + w//2
+        y = -vpts[:,1] / vpts[:, 2] * focal_length * max(h, w)/2.0 + h//2
+        return x, y
 
+    def to_pixel(self, vecs, focal_length=2.1875*256 , w=512):
+        x = vecs[0] / vecs[2] * focal_length + w//2
+        y = -vecs[1] / vecs[2] * focal_length + w//2
+        return x, y
 
 
 
