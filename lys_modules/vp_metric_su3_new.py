@@ -66,7 +66,7 @@ class Su3():
 
         gt_pt = self.read_gt(gt_filename)
         result_pt = self.read_result(result_filename)
-        degree = self.get_degree()
+        degree = self.compare_degree(gt_pt, result_pt)
 
         if self.img_ok:
             gt_x, gt_y = self.to_pixel(gt_pt) # FIXME : 입력 gt_pt 조정 필요
@@ -89,7 +89,14 @@ class Su3():
             pred_x, pred_y = float(lines[5]), float(lines[6])
         return [pred_x, pred_y]
         
-    def get_degree(self, gt, result):
+    def compare_degree(self, gt, result, focal_length=2.1875*256):
+        print(gt, result)
+        result = [result[0],result[1],focal_length]
+        wh = [512,512]
+        for g in gt:
+            degree = self.get_degree(g, result, wh)
+            print(f"result {degree} {g}")
+
         pass
 
     def check_img(self):
@@ -105,6 +112,25 @@ class Su3():
         x = vecs[0] / vecs[2] * focal_length + w//2
         y = -vecs[1] / vecs[2] * focal_length + w//2
         return x, y
+    
+    def get_degree(self, gt, result, wh):
+        wh = np.array(wh)
+        vector_vp = self.vector_normalize(int(result[0]), int(result[1]), wh)
+        vector_gt = self.vector_normalize(gt[0], gt[1], wh)
+        vp_norm = np.linalg.norm(vector_vp)
+        gt_norm = np.linalg.norm(vector_gt)
+
+        dot_gt_vp = (np.array(vector_vp) @ np.array(vector_gt))/(vp_norm*gt_norm) # .clip(max=1)
+        degree = np.arccos(dot_gt_vp)*180/np.pi # neurvps 에서는 err로 되어있는 변수
+        return degree
+
+    def vector_normalize(self, point_x, point_y, wh):
+        cx = wh[0]//2
+        cy = wh[1]//2
+        f = 2.1875 * wh[0]//2
+        vector = [(point_x-cx), (point_y-cy), f]
+        # norm = np.sqrt(vector[0]*vector[0]+vector[1]*vector[1]+f*f)
+        return vector#/norm
 
 
 
