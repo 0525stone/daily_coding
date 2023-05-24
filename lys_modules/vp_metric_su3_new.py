@@ -27,7 +27,7 @@ class Su3():
         self.result_pts = []
 
         self.init_data()
-        self.loop_files()
+        # self.loop_files()
 
     def summary(self):
         print(f"Ground truth root : {self.gt_root} files : {len(self.gt_files)}")
@@ -63,16 +63,16 @@ class Su3():
     def read_data(self, idx):
         gt_filename = self.gt_files[idx]
         result_filename = self.result_files[idx]
-
-        gt_pt = self.read_gt(gt_filename)
-        result_pt = self.read_result(result_filename)
+        print(result_filename)
+        gt_pt = self.__read_gt(gt_filename)
+        result_pt = self.__read_result(result_filename)
         degree = self.compare_degree(gt_pt, result_pt)
 
         if self.img_ok:
             gt_x, gt_y = self.to_pixel(gt_pt) # FIXME : 입력 gt_pt 조정 필요
             self.check_img()
 
-    def read_gt(self,gt_filename):
+    def __read_gt(self,gt_filename):
         gt_filename = os.path.join(self.gt_root,gt_filename)
         if self.gt_format=='.npz':
             gt = np.load(gt_filename)
@@ -80,7 +80,7 @@ class Su3():
             # gt = self.gt3points(gt)
         return gt
 
-    def read_result(self, result_filename):
+    def __read_result(self, result_filename):
         # result는 전부 txt 일 예정
         result_filename = os.path.join(self.result_root, result_filename)
         with open(result_filename, 'r') as f:
@@ -90,7 +90,7 @@ class Su3():
         return [pred_x, pred_y]
         
     def compare_degree(self, gt, result, focal_length=2.1875*256):
-        print(gt, result)
+        print(f"vp:{result}\ngt:{gt}")
         result = [result[0],result[1],focal_length]
         wh = [512,512]
         for g in gt:
@@ -115,12 +115,13 @@ class Su3():
     
     def get_degree(self, gt, result, wh):
         wh = np.array(wh)
-        vector_vp = self.vector_normalize(int(result[0]), int(result[1]), wh)
-        vector_gt = self.vector_normalize(gt[0], gt[1], wh)
-        vp_norm = np.linalg.norm(vector_vp)
-        gt_norm = np.linalg.norm(vector_gt)
+        gt = [gt[0],-(gt[1]),gt[2]]
+        result = [result[0]-wh[0]//2, result[1]-wh[1]//2, result[2]]
 
-        dot_gt_vp = (np.array(vector_vp) @ np.array(vector_gt))/(vp_norm*gt_norm) # .clip(max=1)
+        vp_norm = np.linalg.norm(result)
+        gt_norm = np.linalg.norm(gt)
+
+        dot_gt_vp = (np.array(gt) @ np.array(result))/(vp_norm*gt_norm) # .clip(max=1)
         degree = np.arccos(dot_gt_vp)*180/np.pi # neurvps 에서는 err로 되어있는 변수
         return degree
 
@@ -131,7 +132,6 @@ class Su3():
         vector = [(point_x-cx), (point_y-cy), f]
         # norm = np.sqrt(vector[0]*vector[0]+vector[1]*vector[1]+f*f)
         return vector#/norm
-
 
 
 def main():
@@ -147,7 +147,14 @@ def main():
     result_root = "Y:/git/data_txt/result_su3_sample_new"
 
     su3 = Su3(ground_truth_root,result_root)
-    su3.summary()
+
+    vp = [231, 246, 2.1875 * 256]
+    gt = [([-0.05008141,  0.01662795,  0.99860671]), 
+      ([9.98745139e-01, 8.33797578e-04, 5.00744691e-02]), 
+      ([-0.        , -0.9998614 ,  0.01664884])]
+    su3.compare_degree(gt, vp)
+    su3.loop_files()
+    # su3.summary()
 
 if __name__=="__main__":
     main()
