@@ -26,6 +26,8 @@ class Su3():
         self.gt_pts = [] # 몇만개의 데이터에 대해서 갖고 있게끔 하는게 맞을까? 그때 그때 읽어서 하는게 나을듯
         self.result_pts = []
 
+        self.degree_list = []
+
         self.init_data()
         # self.loop_files()
 
@@ -39,8 +41,6 @@ class Su3():
         self.result_files = sorted(os.listdir(self.result_root))
         # gt 파일들은 경로를 불러오는데 방법이 필요함 => 결과 파일명에서 경로를 따로 따내서 해야함
         for idx, f in enumerate(self.result_files):
-            # if idx<5:
-            #     print(f)
             filename = os.path.basename(f)
             f_dir = filename.split('_')[0]
             fname = '_'.join(os.path.basename(f).split('_')[1:]).split('.')[0]
@@ -50,35 +50,77 @@ class Su3():
                 gt_filename = f"{self.gt_root}/{f_dir}/{fname}_camera{self.gt_format}"
             self.gt_files.append(gt_filename)
                 
-    def loop_files(self):
+    def process_total_data(self):
+        self.degree_list = []
         for idx, (gt, result) in enumerate(zip(self.gt_files, self.result_files)): # FIXME : gt, result없이 그냥 idx만 읽게 해도됨
             assert gt!=result, f"{gt}\t{result}"
-            if idx<2:
+            if idx<10:
                 if self.img_ok:
                     self.check_img()
                 # FIXME : 예외처리해야함. 파일 만약에 없는 경우...
-                gt_pt, result_pt = self.read_data(idx) # TODO : idx로 img를 불러오려면.. 
-                self.process_data(gt_pt, result_pt)
-                
+                gt_pt, result_pt = self.__read_data(idx) # TODO : idx로 img를 불러오려면.. 
+                degree, gt_pt, result_pt = self.process_data(gt_pt, result_pt)
+                self.degree_list.append(degree)
+        print("================================")
+        print(f"result : {len(self.degree_list)}")
+        return self.degree_list
+    
+    def process_data(self, gt_pt, result_pt):
+        # 이 함수만 따로 쓸 수 있게 인자를 줘서 실행하게끔.. 전역변수로 프로그램 실행하는 것은 안좋dma
+        degree, gt = self.__compare_degree(gt_pt, result_pt)
+        print(f"gt : {gt}\tpred : {result_pt}\ndegree : {degree}\n")
+        return degree, gt, result_pt
+    
+    def process_total_result(self):
+        # TODO : AA accuracy 구하기
+        self.AA_graph(self.degree_list)
 
-    def read_data(self, idx):
+    def AA_graph(self, degree_list, AA_upper_th=20):
+        aa_list = []
+        th_list = []
+        
+        for th in range(0,AA_upper_th*10,1):
+            th_ = th/1000
+            for idx, e in enumerate(degree_list):
+                if e<th_: 
+                    aa = (len(degree_list)-idx+1)/len(degree_list)
+                    th_list.append(th_*100)
+                    aa_list.append(aa)
+                    break
+        plt.plot(th_list, aa_list, label=f"result")
+
+        print(f"AA@1 eq : {self._AA(th_list, aa_list, 1)}")
+        print(f"AA@2 eq : {self._AA(th_list, aa_list, 2)}")
+        print(f"AA@10 eq : {self._AA(th_list, aa_list, 10)}")
+        print(f"AA@20 eq : {self._AA(th_list, aa_list, 20)}")
+        plt.legend()
+        plt.show()
+
+    def _AA(self, x, y, threshold):
+        """
+        x : degree 전체를 모아 놓은 것(오름차순) => degree는 gt_vector, pred_vector 사이각
+        y :   y = (1 + np.arange(len(err))) / len(loader) / n
+            n : vpts 수  => 소실점의 수(데이터 수랑 같을 것 같은데?)
+            len(loader) => validation 데이터(이미지)의 수(데이터 전체에 대해 10%~20%)
+        """
+        x = np.sort(x)
+
+        index = np.searchsorted(x, threshold) # searchsorted : x[i-1] < threshold <= x[i] 조건을 만족하는 i를 구하는 함수
+        x = np.concatenate([x[:index], [threshold]])
+        y = np.concatenate([y[:index], [threshold]])
+        return ((x[1:] - x[:-1]) * y[:-1]).sum() / threshold*100
+
+    def __read_data(self, idx):
         gt_filename = self.gt_files[idx]
         result_filename = self.result_files[idx]
-        print(result_filename)
+        # print(result_filename)
         gt_pt = self.__read_gt(gt_filename)
         result_pt = self.__read_result(result_filename)
         
-
         if self.img_ok:
             gt_x, gt_y = self.to_pixel(gt_pt) # FIXME : 입력 gt_pt 조정 필요
             self.check_img()
         return gt_pt, result_pt
-
-    def process_data(self, gt_pt, result_pt):
-        # 이 함수만 따로 쓸 수 있게 인자를 줘서 실행하게끔.. 전역변수로 프로그램 실행하는 것은 안좋ㅇ
-        degree, gt = self.__compare_degree(gt_pt, result_pt)
-        print(f"gt : {gt}\npred : {result_pt}\ndegree : {degree}\n")
-        
 
     def __read_gt(self,gt_filename):
         gt_filename = os.path.join(self.gt_root,gt_filename)
@@ -98,18 +140,15 @@ class Su3():
         return [pred_x, pred_y]
         
     def __compare_degree(self, gt, result, focal_length=2.1875*256, img_w_h=[512,512]):
-        print(f"vp:{result}\ngt:{gt}")
         result = [result[0],result[1],focal_length]
         final_degree = 180
         final_gt = []
 
         for g in gt:
             degree, gt, result = self.get_degree(g, result, img_w_h)
-            # print(f"result {degree} {g}")
             if degree<final_degree:
                 final_gt = g
                 final_degree = degree
-
         return final_degree, final_gt
 
     def check_img(self):
@@ -159,16 +198,13 @@ def main():
 
     """
     ground_truth_root = "Y:/git/DeepGuider/bin/data/su3"
-    result_root = "Y:/git/data_txt/result_su3_sample_new"
+    # result_root = "Y:/git/data_txt/result_su3_sample_new"
+    result_root = "Y:/git/data_txt/result_exp3_su3"
 
     su3 = Su3(ground_truth_root,result_root)
+    su3.process_total_data()
+    su3.process_total_result()
 
-    vp = [231, 246, 2.1875 * 256]
-    gt = [([-0.05008141,  0.01662795,  0.99860671]), 
-      ([9.98745139e-01, 8.33797578e-04, 5.00744691e-02]), 
-      ([-0.        , -0.9998614 ,  0.01664884])]
-    # degree, gt= su3.__compare_degree(gt, vp)
-    su3.loop_files()
     # su3.summary()
 
 if __name__=="__main__":
