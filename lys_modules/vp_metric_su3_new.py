@@ -53,11 +53,12 @@ class Su3():
     def loop_files(self):
         for idx, (gt, result) in enumerate(zip(self.gt_files, self.result_files)): # FIXME : gt, result없이 그냥 idx만 읽게 해도됨
             assert gt!=result, f"{gt}\t{result}"
-            if idx<1:
+            if idx<2:
                 if self.img_ok:
                     self.check_img()
-            # FIXME : 예외처리해야함. 파일 만약에 없는 경우...
-                self.read_data(idx) # TODO : idx로 img를 불러오려면.. 
+                # FIXME : 예외처리해야함. 파일 만약에 없는 경우...
+                gt_pt, result_pt = self.read_data(idx) # TODO : idx로 img를 불러오려면.. 
+                self.process_data(gt_pt, result_pt)
                 
 
     def read_data(self, idx):
@@ -66,11 +67,18 @@ class Su3():
         print(result_filename)
         gt_pt = self.__read_gt(gt_filename)
         result_pt = self.__read_result(result_filename)
-        degree = self.compare_degree(gt_pt, result_pt)
+        
 
         if self.img_ok:
             gt_x, gt_y = self.to_pixel(gt_pt) # FIXME : 입력 gt_pt 조정 필요
             self.check_img()
+        return gt_pt, result_pt
+
+    def process_data(self, gt_pt, result_pt):
+        # 이 함수만 따로 쓸 수 있게 인자를 줘서 실행하게끔.. 전역변수로 프로그램 실행하는 것은 안좋ㅇ
+        degree, gt = self.__compare_degree(gt_pt, result_pt)
+        print(f"gt : {gt}\npred : {result_pt}\ndegree : {degree}\n")
+        
 
     def __read_gt(self,gt_filename):
         gt_filename = os.path.join(self.gt_root,gt_filename)
@@ -89,15 +97,20 @@ class Su3():
             pred_x, pred_y = float(lines[5]), float(lines[6])
         return [pred_x, pred_y]
         
-    def compare_degree(self, gt, result, focal_length=2.1875*256):
+    def __compare_degree(self, gt, result, focal_length=2.1875*256, img_w_h=[512,512]):
         print(f"vp:{result}\ngt:{gt}")
         result = [result[0],result[1],focal_length]
-        wh = [512,512]
-        for g in gt:
-            degree = self.get_degree(g, result, wh)
-            print(f"result {degree} {g}")
+        final_degree = 180
+        final_gt = []
 
-        pass
+        for g in gt:
+            degree, gt, result = self.get_degree(g, result, img_w_h)
+            # print(f"result {degree} {g}")
+            if degree<final_degree:
+                final_gt = g
+                final_degree = degree
+
+        return final_degree, final_gt
 
     def check_img(self):
         pass
@@ -113,17 +126,19 @@ class Su3():
         y = -vecs[1] / vecs[2] * focal_length + w//2
         return x, y
     
-    def get_degree(self, gt, result, wh):
-        wh = np.array(wh)
+    def get_degree(self, gt, result, img_w_h):
+        img_w_h = np.array(img_w_h)
+        if gt[2]<0:
+            gt[2] = -gt[2]
         gt = [gt[0],-(gt[1]),gt[2]]
-        result = [result[0]-wh[0]//2, result[1]-wh[1]//2, result[2]]
+        result = [result[0]-img_w_h[0]//2, result[1]-img_w_h[1]//2, result[2]]
 
         vp_norm = np.linalg.norm(result)
         gt_norm = np.linalg.norm(gt)
 
         dot_gt_vp = (np.array(gt) @ np.array(result))/(vp_norm*gt_norm) # .clip(max=1)
         degree = np.arccos(dot_gt_vp)*180/np.pi # neurvps 에서는 err로 되어있는 변수
-        return degree
+        return degree, gt, result
 
     def vector_normalize(self, point_x, point_y, wh):
         cx = wh[0]//2
@@ -152,7 +167,7 @@ def main():
     gt = [([-0.05008141,  0.01662795,  0.99860671]), 
       ([9.98745139e-01, 8.33797578e-04, 5.00744691e-02]), 
       ([-0.        , -0.9998614 ,  0.01664884])]
-    su3.compare_degree(gt, vp)
+    # degree, gt= su3.__compare_degree(gt, vp)
     su3.loop_files()
     # su3.summary()
 
