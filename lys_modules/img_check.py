@@ -25,13 +25,13 @@ def get_degree(vec1, vec2):
 
 
 
-img_dir = "J:/git/DeepGuider/bin/data/su3/000/0017_0.png"
+img_dir = "Y:/git/DeepGuider/bin/data/su3/000/0017_0.png"
 vp = [136, 275, 2.1875 * 256]
 json_data = [[ 0.97606232, -0.00642975,  0.21739599], 
          [-0.21749105, -0.02885559,  0.97563569],
          [0.        , 0.99956291, 0.02956327]]
 
-img_dir = "J:/git/DeepGuider/bin/data/su3/000/0022_0.png"
+img_dir = "Y:/git/DeepGuider/bin/data/su3/000/0022_0.png"
 vp = [231, 246, 2.1875 * 256]
 json_data = [([-0.05008141,  0.01662795,  0.99860671]), 
              ([9.98745139e-01, 8.33797578e-04, 5.00744691e-02]), 

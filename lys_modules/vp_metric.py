@@ -151,11 +151,11 @@ class vp_metric():
 
 if __name__=="__main__":
     
-    root_dir = "J:" #  "/Users/johnlee" ,"J:/"
+    root_dir = "Y:" #  "/Users/johnlee" ,"J:/"
     dataset_name = "ava"
     dataset_name = "flickr"
     # dataset_name = "su3" 
-    dataset_name = "valid"
+    # dataset_name = "valid"
 
     if dataset_name=="ava":
         gt_path = f"{root_dir}/git/data_txt/vp-labels/gt_ava" # "D:\git\data_txt/vp-labels/gt_ava"
