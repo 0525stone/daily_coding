@@ -217,10 +217,15 @@ def main():
     
 
     """
+<<<<<<< Updated upstream
     ground_truth_root = "Y:/git/DeepGuider/bin/data/su3"
     result_root = "Y:/git/data_txt/result_su3_sample_new"
     # result_root = "C:/git/DeepGuider/bin/result_su3_sample_0528"
     # result_root = "Y:/git/data_txt/result_su3"
+=======
+    ground_truth_root = "C:/git/DeepGuider/bin/data/su3"
+    result_root = "C:/git/data_txt/result_su3_sample_new"
+>>>>>>> Stashed changes
 
     su3 = Su3(ground_truth_root,result_root)
     su3.process_total_data()
