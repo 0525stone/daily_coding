@@ -39,7 +39,7 @@ class ETRI_dataloader():
         print(f"result root : {len(self.data_res)}")
         print()
         
-    def process_total_data(self, focal_length=1280):
+    def process_total_data(self, focal_length=250):
         # MEMO : gt 에서 frame 숫자를 읽어서 result의 index로 읽어오기
         for idx, gt_line in enumerate(self.data_gt):
             # if idx<10:
