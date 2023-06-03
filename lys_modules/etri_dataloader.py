@@ -17,6 +17,7 @@ class ETRI_dataloader():
         self.gt_root = ground_truth_root # TODO : 데이터에 대한 객체를 만들어야하나?
         self.gt_txt = gt_txt
         self.result_txt = result_txt
+        self.index_list = []
 
         # 필요 파라미터들
         self.gt_format = '.npz' # '.json' TODO : json에 대해서도 읽을 수 있게 해야함ㄴ
@@ -39,19 +40,19 @@ class ETRI_dataloader():
         print(f"result root : {len(self.data_res)}")
         print()
         
-    def process_total_data(self, focal_length=250):
+    def process_total_data(self, focal_length=1029):
         # MEMO : gt 에서 frame 숫자를 읽어서 result의 index로 읽어오기
         for idx, gt_line in enumerate(self.data_gt):
             # if idx<10:
             idx_data = int(gt_line.split(',')[0])
-            print(f"\n{idx_data}\t{self.data_res[idx_data]}\n{gt_line}\n")
+            # print(f"\n{idx_data}\t{self.data_res[idx_data]}\n{gt_line}\n")
             gt_pt  = [float(gt_line.split(',')[2]), float(gt_line.split(',')[3]), focal_length]
             result_pt = self.__read_result_idx(self.data_res[idx_data], focal_length)
             degree, gt_pt, result_pt = self.process_data(gt_pt, result_pt)
             self.degree_list.append(degree)
         return self.degree_list
 
-    def __read_result_idx(self, result_line, focal_length=640):
+    def __read_result_idx(self, result_line, focal_length=735):
         result_pt = [float(result_line.split(',')[5]),float(result_line.split(',')[6]), focal_length]
         return result_pt
 
@@ -63,16 +64,14 @@ class ETRI_dataloader():
     # MEMO : vp_metric_su3_new에서 복붙하는 코드
     def process_data(self, gt_pt, result_pt):
         # 이 함수만 따로 쓸 수 있게 인자를 줘서 실행하게끔.. 전역변수로 프로그램 실행하는 것은 안좋dma
-        degree, gt = self.__compare_degree(gt_pt, result_pt)
-        # print(f"gt : {gt}\tpred : {result_pt}\ndegree : {degree}\n")
+        degree, gt = self.__compare_degree(gt_pt, result_pt, focal_length=1029)
         return degree, gt, result_pt
-    
     
     def get_degree(self, gt, result, img_w_h):
         img_w_h = np.array(img_w_h)
         if gt[2]<0:
             gt[2] = -gt[2]
-        gt = [gt[0],-(gt[1]),gt[2]]
+        gt = [gt[0],(gt[1]),gt[2]] # FIXME : 왜 두번째 좌표는 -지??
 
         vp_norm = np.linalg.norm(result)
         gt_norm = np.linalg.norm(gt)
