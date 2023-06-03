@@ -12,6 +12,7 @@ ds/.ipynb_checkpoints
 .DS_Store
 twim/*.ipynb
 *.txt
+*.png
 data/*
 data/gt/*
 vp_data/*
