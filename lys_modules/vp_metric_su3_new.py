@@ -190,7 +190,7 @@ class Su3():
         img_w_h = np.array(img_w_h)
         if gt[2]<0:
             gt[2] = -gt[2]
-        gt = [gt[0],-(gt[1]),gt[2]]
+        gt = [gt[0],-(gt[1]),gt[2]] # MEMO : gt[1]에 -를 붙이는 이유는, 그래픽 모델을 비전 모델로 바꾸기 위한 것으로 추정
 
         vp_norm = np.linalg.norm(result)
         gt_norm = np.linalg.norm(gt)
