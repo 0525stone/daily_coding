@@ -101,8 +101,8 @@ def draw_matches(img1, kp1, img2, kp2, matches):
 K = np.array([[1000, 0, 320], [0, 1000, 240], [0, 0, 1]])
 
 # 두 이미지 로드
-img1 = cv2.imread("data/jh1.jpeg", cv2.IMREAD_GRAYSCALE)
-img2 = cv2.imread("data/jh2.jpeg", cv2.IMREAD_GRAYSCALE)
+img1 = cv2.imread("data/jh_test/test1_1.jpeg", cv2.IMREAD_GRAYSCALE)
+img2 = cv2.imread("data/jh_test/test1_2.jpeg", cv2.IMREAD_GRAYSCALE)
 
 # ORB 검출기 생성
 orb = cv2.ORB_create()
