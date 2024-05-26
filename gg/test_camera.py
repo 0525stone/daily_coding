@@ -32,7 +32,10 @@ while True:
     elif key == ord('c'):
         savename = os.path.join(save_dir,f"{save_idx}.png")
         save_idx+=1
-        cv2.imwrite(savename, frame) 
+        cv2.imwrite(savename, frame)
+    # elif key == ord('r'):
+    #     frame_ref = frame.copy()
+
 
 # 웹캠 및 윈도우 해제
 cap.release()

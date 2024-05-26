@@ -1,41 +1,5 @@
-# import cv2
-# import numpy as np
-
-# def main():
-#     image1 = cv2.imread("data/jh1.jpeg")
-#     image2 = cv2.imread("data/jh2.jpeg")
-
-
-#     # 2. OpenCV를 이용하여 feature들을 찾기
-#     detector = cv2.SIFT_create()  # SIFT feature detector 생성
-#     keypoints1, descriptors1 = detector.detectAndCompute(image1, None)
-#     keypoints2, descriptors2 = detector.detectAndCompute(image2, None)
-
-#     # 3. 각 이미지에서 찾은 feature들을 매칭 시키기
-#     matcher = cv2.DescriptorMatcher_create(cv2.DescriptorMatcher_FLANNBASED)
-#     matches = matcher.knnMatch(descriptors1, descriptors2, k=2)
-
-#     # Lowe's 비율 테스트를 이용하여 좋은 매칭점 선택
-#     good_matches = []
-#     for m, n in matches:
-#         if m.distance < 0.75 * n.distance:
-#             good_matches.append(m)
-
-#     # 4. 두 이미지에서 매칭된 feature들을 두 이미지를 붙인채로 그려주기
-#     matched_image = cv2.drawMatches(image1, keypoints1, image2, keypoints2, good_matches, None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
-
-#     # 결과 이미지 출력
-#     cv2.imshow("Matched Image", matched_image)
-#     cv2.waitKey(0)
-#     cv2.destroyAllWindows()
-
-# if __name__ == "__main__":
-#     main() 
-
-
-
-import numpy as np
 import cv2
+import numpy as np
 
 def find_fundamental_essential_matrix(matches, kp1, kp2, K):
     # 매칭된 키 포인트 위치 추출
@@ -101,8 +65,8 @@ def draw_matches(img1, kp1, img2, kp2, matches):
 K = np.array([[1000, 0, 320], [0, 1000, 240], [0, 0, 1]])
 
 # 두 이미지 로드
-img1 = cv2.imread("data/jh1.jpeg", cv2.IMREAD_GRAYSCALE)
-img2 = cv2.imread("data/jh2.jpeg", cv2.IMREAD_GRAYSCALE)
+img1 = cv2.imread("data/result/0.png", cv2.IMREAD_GRAYSCALE)
+img2 = cv2.imread("data/result/1.png", cv2.IMREAD_GRAYSCALE)
 
 # ORB 검출기 생성
 orb = cv2.ORB_create()
