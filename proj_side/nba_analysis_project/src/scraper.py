@@ -19,6 +19,8 @@ def scrape_nba_data():
         columns = row.find_all("td")
         data.append([col.text.strip() for col in columns])
 
+    # Print header row to verify column names
     columns = [col.text.strip() for col in rows[0].find_all("th")]
+    print("Columns in the scraped data:", columns)  # 확인용 출력
     df = pd.DataFrame(data, columns=columns)
     return df
