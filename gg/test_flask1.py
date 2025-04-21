@@ -10,7 +10,6 @@ TODO
 
 """
 
-
 # Flask 앱 생성
 app = Flask(__name__)
 
