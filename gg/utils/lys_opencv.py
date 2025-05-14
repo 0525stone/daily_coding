@@ -74,6 +74,19 @@ def draw_matches(img1, kp1, img2, kp2, matches, savename):
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+# GPT 권유해준 코드
+def create_detector(detector_type):
+    if detector_type == "ORB":
+        return cv2.ORB_create(), cv2.NORM_HAMMING
+    elif detector_type == "BRISK":
+        return cv2.BRISK_create(), cv2.NORM_HAMMING
+    elif detector_type == "AKAZE":
+        return cv2.AKAZE_create(), cv2.NORM_HAMMING
+    elif detector_type == "SIFT":
+        return cv2.SIFT_create(), cv2.NORM_L2
+    else:
+        raise ValueError(f"Unsupported detector: {detector_type}")
+
 def test_main():
     # 카메라 내부 파라미터 (예시)
     K = np.array([[1000, 0, 320], [0, 1000, 240], [0, 0, 1]])

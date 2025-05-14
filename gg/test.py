@@ -1,6 +1,10 @@
 """
 250421 Test 하는 Raw 한 코드들 여기에 추가해서 정리할 예정..
 
+Debug 모드를 코드로 따로 구현하고 싶음
+    Debug 모드의 경우, 어떤 특징검출기를 쓰고, 어떤 파라미터 값을 적용한지 중간중간 혹은 전체 브리핑해주게
+        - 그렇게 하려면 Dict 형 데이터를 쓰면 되나?
+
 """
 from utils import lys_opencv as utop
 from utils import lys_file as ut
@@ -37,25 +41,38 @@ def test_main():
 
 # 검출기 기준으로 함수 만들어서 정리 가능할 듯
 #   다른 검출기들도 같은 형식으로 호출하고 사용함함
-    # ORB 검출기 생성
-    orb = cv2.ORB_create()
+    ### 예전 버전전
+    # # ORB 검출기 생성
+    # orb = cv2.ORB_create()
 
-    # 키 포인트와 설명자 검출
-    kp1, des1 = orb.detectAndCompute(img1, None)
-    kp2, des2 = orb.detectAndCompute(img2, None)
+    # # 키 포인트와 설명자 검출
+    # kp1, des1 = orb.detectAndCompute(img1, None)
+    # kp2, des2 = orb.detectAndCompute(img2, None)
+
+
+#   다른 검출기 편하게 호출하는 버전
+    detector_type = "ORB" # ORB, BRISK, AKAZE, SIFT
+    detector, norm_type = utop.create_detector(detector_type)
+
+    kp1, des1 = detector.detectAndCompute(img1, None)
+    kp2, des2 = detector.detectAndCompute(img2, None)
+
 
     # BFMatcher 객체 생성
-    bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=False)
+    bf = cv2.BFMatcher(norm_type, crossCheck=False)
 
     # knnMatch 실행
     matches = bf.knnMatch(des1, des2, k=2)
 
-    # Lowe's ratio test
+    # Lowe's ratio test     # TODO : 이거 뭔지 확인 필요
+    lowe_ratio = 0.5  # NOTE
     good_matches = []
     for match in matches:
-        if match[0].distance < 0.75 * match[1].distance:
-            good_matches.append(match[0])
+        if len(match) == 2:
+            if match[0].distance < lowe_ratio * match[1].distance:
+                good_matches.append(match[0])
 
+    print(f"The number of good matches :  {len(good_matches)}")
 # 함수 정리 완료
     # 기본 행렬과 본질 행렬 계산
     E, mask = utop.find_fundamental_essential_matrix(good_matches, kp1, kp2, K)
