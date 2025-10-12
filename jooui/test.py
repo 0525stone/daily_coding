@@ -2,8 +2,6 @@ import os
 import pandas as pd
 
 
-
-
 def main():
     root_dir = "./data/jooui/adult"
     list_files = os.listdir(root_dir)

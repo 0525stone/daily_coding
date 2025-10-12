@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # import cv2
 # import numpy as np
 
@@ -34,7 +35,10 @@
 
 
 import numpy as np
+=======
+>>>>>>> fb76d7783a74252b77e53b3466f854bcad287d9a
 import cv2
+import numpy as np
 
 def find_fundamental_essential_matrix(matches, kp1, kp2, K):
     # 매칭된 키 포인트 위치 추출
@@ -100,8 +104,8 @@ def draw_matches(img1, kp1, img2, kp2, matches):
 K = np.array([[1000, 0, 320], [0, 1000, 240], [0, 0, 1]])
 
 # 두 이미지 로드
-img1 = cv2.imread("data/jh_test/test1_1.jpeg", cv2.IMREAD_GRAYSCALE)
-img2 = cv2.imread("data/jh_test/test1_2.jpeg", cv2.IMREAD_GRAYSCALE)
+img1 = cv2.imread("data/result/0.png", cv2.IMREAD_GRAYSCALE)
+img2 = cv2.imread("data/result/1.png", cv2.IMREAD_GRAYSCALE)
 
 # ORB 검출기 생성
 orb = cv2.ORB_create()
