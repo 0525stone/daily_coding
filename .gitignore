@@ -16,3 +16,4 @@ twim/*.ipynb
 data/*
 data/gt/*
 vp_data/*
+*.csv
