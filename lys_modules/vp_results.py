@@ -70,33 +70,34 @@ def eda_roadtheta(roa_lines, df_gt_column):
 
 def main():
     root_dir = "./data/etri_dataset"
-    gt_dir = "etri_cart_200219_15h01m_2fps_gt3.txt"
-    neurvps_dir = "result_neurvps.txt"
+    gt_dir = "gt.txt"
+    # neurvps_dir = "result_neurvps.txt"
     vpestimation_dir = "result_vpestimation.txt"
     roadtheta_dir = "result_roadtheta.txt"
 
     gt_dir = os.path.join(root_dir, gt_dir)
-    neurvps_dir = os.path.join(root_dir, neurvps_dir)
+    # neurvps_dir = os.path.join(root_dir, neurvps_dir)
     vpestimation_dir = os.path.join(root_dir, vpestimation_dir)
     roadtheta_dir = os.path.join(root_dir, roadtheta_dir)
 
     gt_lines = readlines_txt_files(gt_dir)
-    neu_lines = readlines_txt_files(neurvps_dir)
+    # neu_lines = readlines_txt_files(neurvps_dir)
     vpe_lines = readlines_txt_files(vpestimation_dir)
     roa_lines = readlines_txt_files(roadtheta_dir)
 
     print(f"gt lines : {len(gt_lines)}\n{gt_lines[0]}")
-    print(f"neurvps lines : {len(neu_lines)}\n{neu_lines[0]}")
+    # print(f"neurvps lines : {len(neu_lines)}\n{neu_lines[0]}")
     print(f"vpestimation lines : {len(vpe_lines)}\n{vpe_lines[0]}")
     print(f"roadtheta lines : {len(roa_lines)}\n{roa_lines[0]}")
 
     # Dataframe 만듦기
     df_gt_column = eda_gt(gt_lines)
-    df_neurvps_column = eda_neurvps_vpestimation(neu_lines, df_gt_column)
+    # df_neurvps_column = eda_neurvps_vpestimation(neu_lines, df_gt_column)
     df_vpestimation_column = eda_neurvps_vpestimation(vpe_lines, df_gt_column)
     df_roadtheta_column = eda_roadtheta(roa_lines, df_gt_column)
 
-    print(f"gt_column : {len(df_gt_column)}\nneurvps_column : {len(df_neurvps_column)}\nvpestimation_column : {len(df_vpestimation_column)}")
+    # print(f"gt_column : {len(df_gt_column)}\nneurvps_column : {len(df_neurvps_column)}\nvpestimation_column : {len(df_vpestimation_column)}")
+    print(f"gt_column : {len(df_gt_column)}\nvpestimation_column : {len(df_vpestimation_column)}")
 
 if __name__ =="__main__":
     main()
