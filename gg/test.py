@@ -19,9 +19,13 @@ def test_main():
     K = np.array([[1000, 0, 320], [0, 1000, 240], [0, 0, 1]])
 
     # Preparation of Images
-    img_root = "data/exp001"
+    img_root = "data/exp004"
     img1_name = "0.png"
-    img2_name = "1.png"
+    img2_name = "2.png"
+
+    # 실험 파라미터터
+    detector_type = "ORB" # ORB, BRISK, AKAZE, SIFT
+    lowe_ratio = 0.75  # NOTE
 
     img1_dir = os.path.join(img_root, img1_name)
     img2_dir = os.path.join(img_root, img2_name)
@@ -49,14 +53,13 @@ def test_main():
     # kp1, des1 = orb.detectAndCompute(img1, None)
     # kp2, des2 = orb.detectAndCompute(img2, None)
 
-
 #   다른 검출기 편하게 호출하는 버전
-    detector_type = "ORB" # ORB, BRISK, AKAZE, SIFT
+
+    # 실험
     detector, norm_type = utop.create_detector(detector_type)
 
     kp1, des1 = detector.detectAndCompute(img1, None)
     kp2, des2 = detector.detectAndCompute(img2, None)
-
 
     # BFMatcher 객체 생성
     bf = cv2.BFMatcher(norm_type, crossCheck=False)
@@ -65,14 +68,13 @@ def test_main():
     matches = bf.knnMatch(des1, des2, k=2)
 
     # Lowe's ratio test     # TODO : 이거 뭔지 확인 필요
-    lowe_ratio = 0.5  # NOTE
     good_matches = []
     for match in matches:
         if len(match) == 2:
             if match[0].distance < lowe_ratio * match[1].distance:
                 good_matches.append(match[0])
-
     print(f"The number of good matches :  {len(good_matches)}")
+
 # 함수 정리 완료
     # 기본 행렬과 본질 행렬 계산
     E, mask = utop.find_fundamental_essential_matrix(good_matches, kp1, kp2, K)

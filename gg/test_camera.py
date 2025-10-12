@@ -11,7 +11,7 @@ if not cap.isOpened():
 
 # 저장을 위한 변수들
 save_idx = 0
-save_dir = "./data/result"
+save_dir = "./data/exp004"
 if not os.path.exists(save_dir):
     os.makedirs(save_dir)
 
